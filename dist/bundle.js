@@ -194,35 +194,91 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony import */ var _Vectrors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Vectrors */ "./src/js/Vectrors.js");
 ﻿
+
 class Setting {
 }
+
 class Render extends Setting {
     constructor() {
         super();
         this.points = [];
-        this.setting.ctx;
+        this.setting.ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        this.setting.ctx.shadowBlur = 10;
         this.add();
     }
+
     add() {
         for (let p of this.setting.points) {
-            this.points.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5));
+            this.points.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({x: p.x, y: p.y}, 5));
         }
         for (let k of this.points) {
             console.log(k);
         }
     }
+
     draw() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
-        for (let p of this.points) {
-            p.draw();
-            p.move();
+
+
+
+        let lock = 10;
+        let power = 1.5;
+        for (let p1 of this.points) {
+
+            for (let p2 of this.points) {
+
+                if (p1 !== p2) {
+                    // let distance = Vector.pointDistance(p1, p2); // дистаниця
+                    let fVector = _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"].vectorAB(p1, p2); // вектор силы
+                    let diff =    lock ; // относительное растяжение стержня (+)
+
+                    // console.log ("distance: ",distance );
+                    // console.log ("fVector: ", fVector);
+                    // console.log ("diff: ", diff);
+                    // console.log ('res:  = ', (fVector.x * diff * power));
+                    // console.log ('accc:  = ', p1.acc.x);
+
+                    p1.acc.x = (   fVector.x * diff * lock)/1000;
+                    p1.acc.y = (  fVector.y * diff * lock)/1000;
+                    // p1.acc.y = fVector.y + diff * power;
+                }
+            }
+        }
+
+        for (let p1 of this.points) {
+
+            p1.move();
+            p1.draw();
+
+        }
+
+        for (let p1 of this.points) {
+
+            for (let p2 of this.points) {
+                if (p1 !== p2) {
+
+                    this.setting.ctx.beginPath();
+                    this.setting.ctx.moveTo(p1.x, p1.y);
+                    this.setting.ctx.lineTo(p2.x, p2.y);
+                    this.setting.ctx.strokeStyle = '#ff16be';
+
+                    this.setting.ctx.lineWidth = 1.5;
+                    this.setting.ctx.stroke();
+                }
+            }
+
         }
     }
+
     animate() {
         this.draw();
-        requestAnimationFrame(() => this.animate());
+
+        let z = requestAnimationFrame(() => this.animate());
+
+        // setTimeout()
     }
 }
+
 //# sourceMappingURL=Render.js.map
 
 /***/ }),
@@ -249,29 +305,36 @@ class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
     get length() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
-    static distance(a, b) {
+    static vectorAB(a, b) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
+    static pointDistance (a, b) {
+        return  Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2);
+    }
+
 }
 class Point extends Vector {
     constructor(pos, size) {
         super(pos.x, pos.y);
         this.typ = 'Point';
         this.vel = new Vector();
-        this.acc = new Vector(0, 0.5);
+        this.acc = new Vector(0.0, 0);
+        this.g = 0.0;
         // this.pos = new Vector();
         this.size = 10;
         this.draw();
     }
     move() {
-        this.vel.y += this.acc.y;
-        this.y += this.vel.y;
+
 
         if (this.y + this.size > this.setting.height) {
             this.y = this.setting.height - this.size;
             this.vel.y *= -1;
-            this.vel.y *= 0.95;
         }
+        this.vel.y += this.acc.y ;
+        this.vel.x += this.acc.x;
+        this.y += this.vel.y;
+        this.x += this.vel.x;
     }
     draw() {
         this.setting.ctx.beginPath();
@@ -279,7 +342,7 @@ class Point extends Vector {
         this.setting.ctx.fillStyle = '#eee';
         this.setting.ctx.fill();
         this.setting.ctx.lineWidth = 1;
-        this.setting.ctx.strokeStyle = '#000';
+        this.setting.ctx.strokeStyle = '#000000';
         this.setting.ctx.stroke();
     }
 }
@@ -301,13 +364,10 @@ __webpack_require__.r(__webpack_exports__);
 ﻿
 console.log('gge');
 let canvas = window.document.querySelector('canvas');
-
 canvas.width = 700;
 canvas.height = 400;
-
 let width = canvas.width / 2;
 let height = canvas.height / 2;
-
 let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     canvas: canvas,
     ctx: canvas.getContext("2d"),
@@ -316,8 +376,9 @@ let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
-        { x: 200, y: height },
-        { x: 500, y: height }
+        { x: 200, y: 300 },
+        // { x: 350, y: 100 },
+        { x: 500, y: 300 }
     ]
 });
 //# sourceMappingURL=index.js.map

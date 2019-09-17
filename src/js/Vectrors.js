@@ -8,29 +8,36 @@ class Vector extends Setting {
     get length() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
-    static distance(a, b) {
+    static vectorAB(a, b) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
+    static pointDistance (a, b) {
+        return  Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2);
+    }
+
 }
 class Point extends Vector {
     constructor(pos, size) {
         super(pos.x, pos.y);
         this.typ = 'Point';
         this.vel = new Vector();
-        this.acc = new Vector(0, 0.5);
+        this.acc = new Vector(0.0, 0);
+        this.g = 0.0;
         // this.pos = new Vector();
         this.size = 10;
         this.draw();
     }
     move() {
-        this.vel.y += this.acc.y;
-        this.y += this.vel.y;
+
 
         if (this.y + this.size > this.setting.height) {
             this.y = this.setting.height - this.size;
             this.vel.y *= -1;
-            this.vel.y *= 0.95;
         }
+        this.vel.y += this.acc.y ;
+        this.vel.x += this.acc.x;
+        this.y += this.vel.y;
+        this.x += this.vel.x;
     }
     draw() {
         this.setting.ctx.beginPath();
@@ -38,7 +45,7 @@ class Point extends Vector {
         this.setting.ctx.fillStyle = '#eee';
         this.setting.ctx.fill();
         this.setting.ctx.lineWidth = 1;
-        this.setting.ctx.strokeStyle = '#000';
+        this.setting.ctx.strokeStyle = '#000000';
         this.setting.ctx.stroke();
     }
 }
