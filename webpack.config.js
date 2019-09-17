@@ -1,6 +1,14 @@
 const path = require('path');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 module.exports = {
+
+    plugins: [
+        new LiveReloadPlugin({
+            appendScriptTag: true
+        })
+    ],
+
     entry: './src/js/index.js',
     mode: 'development',
     // module: {
@@ -15,12 +23,12 @@ module.exports = {
     //     ],
     // },
     resolve: {
-        extensions: [ '.js' ]
+        extensions: [ '.js', '.css' ]
     },
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     watch: true
 };

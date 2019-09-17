@@ -1,0 +1,23 @@
+{
+  "name": "physx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "webpack-livereload-plugin": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elleremo/physx.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elleremo/physx/issues"
+  },
+  "homepage": "https://github.com/elleremo/physx#readme"
+}

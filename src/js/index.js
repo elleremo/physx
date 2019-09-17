@@ -1,10 +1,13 @@
 ﻿import { Game } from "./Game";
 console.log('gge');
 let canvas = window.document.querySelector('canvas');
+
 canvas.width = 700;
 canvas.height = 400;
+
 let width = canvas.width / 2;
 let height = canvas.height / 2;
+
 let game = new Game({
     canvas: canvas,
     ctx: canvas.getContext("2d"),

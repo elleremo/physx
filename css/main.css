@@ -5,6 +5,9 @@
 body{
     margin: 0;
     height: 100vh;
+    background: linear-gradient(45deg, #58a8ff 0%, #54226d 100%);
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .wrap{
