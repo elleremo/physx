@@ -14,7 +14,7 @@ export class Render extends Setting {
 
     add() {
         for (let p of this.setting.points) {
-            this.points.push(new Point({x: p.x, y: p.y}, 5));
+            this.points.push(new Point({x: p.x, y: p.y}, 5, p.type));
         }
         for (let k of this.points) {
             console.log(k);
@@ -27,15 +27,15 @@ export class Render extends Setting {
 
 
         let lock = 10;
-        let power = 1.5;
+        let power = 0.05;
         for (let p1 of this.points) {
 
             for (let p2 of this.points) {
 
                 if (p1 !== p2) {
-                    // let distance = Vector.pointDistance(p1, p2); // дистаниця
+                    let distance = Vector.pointDistance(p1, p2); // дистаниця
                     let fVector = Vector.vectorAB(p1, p2); // вектор силы
-                    let diff =    lock ; // относительное растяжение стержня (+)
+                    let diff =   distance - lock ; // относительное растяжение стержня (+)
 
                     // console.log ("distance: ",distance );
                     // console.log ("fVector: ", fVector);
@@ -43,16 +43,17 @@ export class Render extends Setting {
                     // console.log ('res:  = ', (fVector.x * diff * power));
                     // console.log ('accc:  = ', p1.acc.x);
 
-                    p1.acc.x = (   fVector.x * diff * lock)/1000;
-                    p1.acc.y = (  fVector.y * diff * lock)/1000;
+                    p1.acc.x = (   fVector.x * diff * lock)/100000;
+                    p1.acc.y = (  fVector.y * diff * lock)/100000;
                     // p1.acc.y = fVector.y + diff * power;
                 }
             }
         }
 
         for (let p1 of this.points) {
-
-            p1.move();
+            if(p1.type !=='static') {
+                p1.move();
+            }
             p1.draw();
 
         }

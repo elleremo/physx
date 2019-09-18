@@ -17,12 +17,13 @@ class Vector extends Setting {
 
 }
 class Point extends Vector {
-    constructor(pos, size) {
+    constructor(pos, size, type) {
         super(pos.x, pos.y);
         this.typ = 'Point';
         this.vel = new Vector();
         this.acc = new Vector(0.0, 0);
         this.g = 0.0;
+        this.type = type;
         // this.pos = new Vector();
         this.size = 10;
         this.draw();
