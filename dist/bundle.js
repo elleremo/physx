@@ -215,12 +215,14 @@ class Render extends Setting {
     }
     draw() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
-        let lock = 40;
+        let lock = 100;
         let power = 0.01;
         let r = 0.02;
         for (let p1 of this.points) {
+            if (p1.type === 'static')
+                continue;
             for (let p2 of this.points) {
-                if (true) {
+                if (p1 !== p2) {
                     let distance = _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"].pointDistance(p1, p2); // дистаниця
                     let fVector = _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"].vectorAB(p1, p2).normalize(); // вектор силы
                     let diff = distance - lock; // относительное растяжение стержня (+)
@@ -229,7 +231,7 @@ class Render extends Setting {
                     //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
                     //  // let fy =       (power * diff) + (p1.acc.y*r) ;
                     //  // let f = (100 )/;
-                    console.log("distance: ", distance);
+                    //  console.log ("distance: ",distance );
                     //  // console.log ("fVector: ", fVector);
                     //  // console.log ("diff: ", diff);
                     //  // console.log ('res:  = ', (fVector.x * diff * power));
@@ -237,11 +239,11 @@ class Render extends Setting {
                     //
                     //  p1.acc.x +=  ( fVector.x * f ) ;
                     //  p1.acc.y += (fVector.y * fy) ;
-                    let plus = (diff / (2));
-                    p1.x += plus * fVector.x;
-                    p2.x -= plus * fVector.x;
-                    p1.y += plus * fVector.y;
-                    p2.y -= plus * fVector.y;
+                    let plus = (diff / (2000));
+                    p1.x += (plus * fVector.x);
+                    p1.y += (plus * fVector.y);
+                    // p2.x -= (plus*fVector.x );
+                    // p2.y -= (plus*fVector.y );
                 }
             }
         }
@@ -333,9 +335,11 @@ class Point extends Vector {
     constructor(pos, size, type) {
         super(pos.x, pos.y);
         this.type = 'Point';
-        this.vel = new Vector();
-        this.acc = new Vector(0, 0);
-        this.grav = 0.1;
+        this.vel = new Vector(0, 5);
+        this.acc = new Vector(0, 0.0);
+        this.grav = 0.0;
+        this.oldx = 0;
+        this.oldy = 0;
         // this.pos = new Vector();
         this.size = size;
         this.type = type;
@@ -347,8 +351,7 @@ class Point extends Vector {
         if (this.type === 'static')
             return;
         if (this.y + this.size > this.setting.height) {
-            this.y = this.setting.height - this.size;
-            this.vel.y *= -0.1;
+            // this.y = this.setting.height - this.size;
         }
         // if (this.y - this.size < 0) {
         //     this.y = 0 + this.size;
@@ -363,9 +366,10 @@ class Point extends Vector {
         //     this.vel.x *= -1;
         // }
         this.vel.y += this.acc.y + this.grav;
-        this.vel.x += this.acc.x;
-        this.y += this.vel.y;
-        this.x += this.vel.x;
+        this.x += this.x - this.oldx;
+        this.y += this.y - this.oldy;
+        this.oldx = this.x;
+        this.oldy = this.y;
     }
     draw() {
         this.setting.ctx.beginPath();
@@ -395,8 +399,8 @@ __webpack_require__.r(__webpack_exports__);
 ﻿
 console.log('gge');
 let canvas = window.document.querySelector('canvas');
-canvas.width = 700;
-canvas.height = 400;
+canvas.width = 800;
+canvas.height = 600;
 let width = canvas.width / 2;
 let height = canvas.height / 2;
 let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
@@ -407,11 +411,9 @@ let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
-        // { x: 100, y: 100, type : 'static' },
         { x: 100, y: 100 },
-        { x: 200, y: 300 },
-        { x: 400, y: 200 },
-        { x: 200, y: 150 }
+        { x: 110, y: 100 }
+        // { x: 200, y: 200 }
     ]
 });
 //# sourceMappingURL=index.js.map

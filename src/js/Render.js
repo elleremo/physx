@@ -20,12 +20,14 @@ export class Render extends Setting {
     }
     draw() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
-        let lock = 40;
+        let lock = 100;
         let power = 0.01;
         let r = 0.02;
         for (let p1 of this.points) {
+            if (p1.type === 'static')
+                continue;
             for (let p2 of this.points) {
-                if (true) {
+                if (p1 !== p2) {
                     let distance = Vector.pointDistance(p1, p2); // дистаниця
                     let fVector = Vector.vectorAB(p1, p2).normalize(); // вектор силы
                     let diff = distance - lock; // относительное растяжение стержня (+)
@@ -34,7 +36,7 @@ export class Render extends Setting {
                     //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
                     //  // let fy =       (power * diff) + (p1.acc.y*r) ;
                     //  // let f = (100 )/;
-                    console.log("distance: ", distance);
+                    //  console.log ("distance: ",distance );
                     //  // console.log ("fVector: ", fVector);
                     //  // console.log ("diff: ", diff);
                     //  // console.log ('res:  = ', (fVector.x * diff * power));
@@ -42,11 +44,11 @@ export class Render extends Setting {
                     //
                     //  p1.acc.x +=  ( fVector.x * f ) ;
                     //  p1.acc.y += (fVector.y * fy) ;
-                    let plus = (diff / (2));
-                    p1.x += plus * fVector.x;
-                    p2.x -= plus * fVector.x;
-                    p1.y += plus * fVector.y;
-                    p2.y -= plus * fVector.y;
+                    let plus = (diff / (2000));
+                    p1.x += (plus * fVector.x);
+                    p1.y += (plus * fVector.y);
+                    // p2.x -= (plus*fVector.x );
+                    // p2.y -= (plus*fVector.y );
                 }
             }
         }

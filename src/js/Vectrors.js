@@ -23,9 +23,11 @@ class Point extends Vector {
     constructor(pos, size, type) {
         super(pos.x, pos.y);
         this.type = 'Point';
-        this.vel = new Vector();
-        this.acc = new Vector(0, 0);
-        this.grav = 0.1;
+        this.vel = new Vector(0, 5);
+        this.acc = new Vector(0, 0.0);
+        this.grav = 0.0;
+        this.oldx = 0;
+        this.oldy = 0;
         // this.pos = new Vector();
         this.size = size;
         this.type = type;
@@ -37,8 +39,7 @@ class Point extends Vector {
         if (this.type === 'static')
             return;
         if (this.y + this.size > this.setting.height) {
-            this.y = this.setting.height - this.size;
-            this.vel.y *= -0.1;
+            // this.y = this.setting.height - this.size;
         }
         // if (this.y - this.size < 0) {
         //     this.y = 0 + this.size;
@@ -53,9 +54,10 @@ class Point extends Vector {
         //     this.vel.x *= -1;
         // }
         this.vel.y += this.acc.y + this.grav;
-        this.vel.x += this.acc.x;
-        this.y += this.vel.y;
-        this.x += this.vel.x;
+        this.x += this.x - this.oldx;
+        this.y += this.y - this.oldy;
+        this.oldx = this.x;
+        this.oldy = this.y;
     }
     draw() {
         this.setting.ctx.beginPath();

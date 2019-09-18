@@ -33,9 +33,12 @@ class Vector extends Setting{
 class Point extends Vector  {
     type: string = 'Point';
     size: number;
-    vel : Vector = new Vector();
-    acc: Vector = new Vector(0, 0);
-    grav : number = 0.1;
+    vel : Vector = new Vector(0, 5);
+    acc: Vector = new Vector(0, 0.0);
+    grav : number = 0.0;
+
+    oldx: number =  0 ;
+    oldy: number = 0;
 
 
     constructor(pos: Position, size: number, type: string) {
@@ -54,8 +57,9 @@ class Point extends Vector  {
         if(this.type === 'static') return;
 
         if (this.y + this.size > this.setting.height ) {
-            this.y = this.setting.height - this.size;
-            this.vel.y *= -0.1;
+            // this.y = this.setting.height - this.size;
+
+
         }
         // if (this.y - this.size < 0) {
         //     this.y = 0 + this.size;
@@ -70,9 +74,11 @@ class Point extends Vector  {
         //     this.vel.x *= -1;
         // }
         this.vel.y += this.acc.y  + this.grav;
-        this.vel.x += this.acc.x;
-        this.y += this.vel.y;
-        this.x += this.vel.x;
+        this.x += this.x - this.oldx ;
+        this.y += this.y - this.oldy ;
+
+        this.oldx = this.x;
+        this.oldy = this.y;
 
     }
 
