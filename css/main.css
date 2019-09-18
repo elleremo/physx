@@ -18,5 +18,5 @@ body{
 }
 
 #canvas {
-    border: 1px solid black
+    border: 1px solid rgba(0, 0, 0, 0.17)
 }

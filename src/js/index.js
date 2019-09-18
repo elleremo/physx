@@ -13,9 +13,11 @@ let game = new Game({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
+        // { x: 100, y: 100, type : 'static' },
+        { x: 100, y: 100 },
         { x: 200, y: 300 },
-        // { x: 350, y: 100 },
-        { x: 500, y: 300 }
+        { x: 400, y: 200 },
+        { x: 200, y: 150 }
     ]
 });
 //# sourceMappingURL=index.js.map

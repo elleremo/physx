@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-541ba81aed1eecea";
+/******/ 	  var id = "webpack-livereload-plugin-script-0b2aa2779637577e";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -194,92 +194,104 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony import */ var _Vectrors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Vectrors */ "./src/js/Vectrors.js");
 ﻿
-
 class Setting {
 }
-
 class Render extends Setting {
     constructor() {
         super();
         this.points = [];
-        this.setting.ctx.shadowColor = 'rgba(0,0,0,0.2)';
-        this.setting.ctx.shadowBlur = 10;
+        // this.setting.ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        // this.setting.ctx.shadowBlur = 10;
+        // this.setting.ctx;
         this.add();
     }
-
     add() {
         for (let p of this.setting.points) {
-            this.points.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({x: p.x, y: p.y}, 5, p.type));
+            this.points.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5, p.type));
         }
         for (let k of this.points) {
             console.log(k);
         }
     }
-
     draw() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
-
-
-
-        let lock = 10;
-        let power = 0.05;
+        let lock = 40;
+        let power = 0.01;
+        let r = 0.02;
         for (let p1 of this.points) {
-
             for (let p2 of this.points) {
-
-                if (p1 !== p2) {
+                if (true) {
                     let distance = _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"].pointDistance(p1, p2); // дистаниця
-                    let fVector = _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"].vectorAB(p1, p2); // вектор силы
-                    let diff =   distance - lock ; // относительное растяжение стержня (+)
-
-                    // console.log ("distance: ",distance );
-                    // console.log ("fVector: ", fVector);
-                    // console.log ("diff: ", diff);
-                    // console.log ('res:  = ', (fVector.x * diff * power));
-                    // console.log ('accc:  = ', p1.acc.x);
-
-                    p1.acc.x = (   fVector.x * diff * lock)/100000;
-                    p1.acc.y = (  fVector.y * diff * lock)/100000;
-                    // p1.acc.y = fVector.y + diff * power;
+                    let fVector = _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"].vectorAB(p1, p2).normalize(); // вектор силы
+                    let diff = distance - lock; // относительное растяжение стержня (+)
+                    //  let f =    ((power  * diff) + p1.vel.x*r + p1.acc.x;
+                    //  let fy =  (power * diff) + p1.vel.y*r + p1.acc.y;
+                    //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
+                    //  // let fy =       (power * diff) + (p1.acc.y*r) ;
+                    //  // let f = (100 )/;
+                    console.log("distance: ", distance);
+                    //  // console.log ("fVector: ", fVector);
+                    //  // console.log ("diff: ", diff);
+                    //  // console.log ('res:  = ', (fVector.x * diff * power));
+                    //  // console.log ('accc:  = ', p1.acc.x);
+                    //
+                    //  p1.acc.x +=  ( fVector.x * f ) ;
+                    //  p1.acc.y += (fVector.y * fy) ;
+                    let plus = (diff / (2));
+                    p1.x += plus * fVector.x;
+                    p2.x -= plus * fVector.x;
+                    p1.y += plus * fVector.y;
+                    p2.y -= plus * fVector.y;
                 }
             }
         }
-
         for (let p1 of this.points) {
-            if(p1.type !=='static') {
-                p1.move();
-            }
+            p1.move();
             p1.draw();
-
         }
-
         for (let p1 of this.points) {
-
             for (let p2 of this.points) {
                 if (p1 !== p2) {
-
                     this.setting.ctx.beginPath();
                     this.setting.ctx.moveTo(p1.x, p1.y);
                     this.setting.ctx.lineTo(p2.x, p2.y);
-                    this.setting.ctx.strokeStyle = '#ff16be';
-
+                    this.setting.ctx.strokeStyle = 'rgba(255,22,190,0.05)';
                     this.setting.ctx.lineWidth = 1.5;
                     this.setting.ctx.stroke();
                 }
             }
-
         }
     }
-
     animate() {
         this.draw();
-
-        let z = requestAnimationFrame(() => this.animate());
-
-        // setTimeout()
+        requestAnimationFrame(() => this.animate());
+        // function guk(){
+        //
+        //     let blength = 50;
+        //     let k = 0.1;
+        //
+        //     let x1 = 0;
+        //     let x2 = 75;
+        //     let vx2 = 0;
+        //     let ax2 = 0;
+        //     let r = 0.2;
+        //
+        //     for (let i=0 ; i < 1000; i++){
+        //
+        //
+        //         let dist = x2 - x1 ; // distance
+        //         let diff = dist - blength; // relative length
+        //         let f = -(k*diff) ;
+        //         console.log(/* `ax2: ${ax2}`, `vx2: ${vx2}`,`px: ${x2}`, */ `dist: ${dist}`, `diff: ${diff}`, `f: ${f}`     )
+        //
+        //         ax2 = f * r;
+        //         vx2 = vx2 + ax2;
+        //         x2 = x2 + vx2;
+        //
+        //     }
+        // }
     }
 }
-
 //# sourceMappingURL=Render.js.map
 
 /***/ }),
@@ -306,34 +318,51 @@ class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
     get length() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
+    normalize() {
+        let length = this.length;
+        return new Vector(this.x / length, this.y / length);
+    }
     static vectorAB(a, b) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
-    static pointDistance (a, b) {
-        return  Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2);
+    static pointDistance(a, b) {
+        return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
-
 }
 class Point extends Vector {
     constructor(pos, size, type) {
         super(pos.x, pos.y);
-        this.typ = 'Point';
+        this.type = 'Point';
         this.vel = new Vector();
-        this.acc = new Vector(0.0, 0);
-        this.g = 0.0;
-        this.type = type;
+        this.acc = new Vector(0, 0);
+        this.grav = 0.1;
         // this.pos = new Vector();
-        this.size = 10;
+        this.size = size;
+        this.type = type;
         this.draw();
+        // this.vel.x = Math.random()*2 ;
+        // this.vel.y = Math.random()*2 ;
     }
     move() {
-
-
+        if (this.type === 'static')
+            return;
         if (this.y + this.size > this.setting.height) {
             this.y = this.setting.height - this.size;
-            this.vel.y *= -1;
+            this.vel.y *= -0.1;
         }
-        this.vel.y += this.acc.y ;
+        // if (this.y - this.size < 0) {
+        //     this.y = 0 + this.size;
+        //     this.vel.y *= -1;
+        // }
+        // if (this.x + this.size > this.setting.width ) {
+        //     this.x = this.setting.width - this.size;
+        //     this.vel.x *= -1;
+        // }
+        // if (this.x - this.size < 0) {
+        //     this.x = 0 + this.size;
+        //     this.vel.x *= -1;
+        // }
+        this.vel.y += this.acc.y + this.grav;
         this.vel.x += this.acc.x;
         this.y += this.vel.y;
         this.x += this.vel.x;
@@ -343,7 +372,7 @@ class Point extends Vector {
         this.setting.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
         this.setting.ctx.fillStyle = '#eee';
         this.setting.ctx.fill();
-        this.setting.ctx.lineWidth = 1;
+        this.setting.ctx.lineWidth = 0.1;
         this.setting.ctx.strokeStyle = '#000000';
         this.setting.ctx.stroke();
     }
@@ -378,9 +407,11 @@ let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
+        // { x: 100, y: 100, type : 'static' },
+        { x: 100, y: 100 },
         { x: 200, y: 300 },
-        // { x: 350, y: 100 },
-        { x: 500, y: 300 }
+        { x: 400, y: 200 },
+        { x: 200, y: 150 }
     ]
 });
 //# sourceMappingURL=index.js.map
