@@ -166,8 +166,9 @@ let s = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"](4, 5);
 //     fixedPoints: Position;
 //     point: Position;
 // }
-class Game {
+class Game extends _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"] {
     constructor(setting) {
+        super();
         // this.set.ctx = setting.canvas.getContext("2d");
         _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting = setting;
         _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting.Vpoints = [];
@@ -211,7 +212,7 @@ class Render extends Setting {
             this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5, p.type));
         }
         for (let k of this.setting.Vpoints) {
-            console.log(k);
+            // console.log(k);
         }
     }
     draw() {
@@ -362,10 +363,8 @@ class Point extends Vector {
         if (this.type === 'static')
             return;
         if (this.y + this.size >= this.setting.height) {
-            this.y = this.setting.height - this.size;
-            let o = this.oldy;
             let n = this.y;
-            this.y = o;
+            this.y = this.y = this.setting.height - this.size;
             this.oldy = n;
         }
         if (this.y - this.size < 0) {
@@ -459,11 +458,11 @@ __webpack_require__.r(__webpack_exports__);
 ﻿
 console.log('gge');
 let canvas = window.document.querySelector('canvas');
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = document.body.clientWidth;
+canvas.height = document.body.clientHeight;
 let width = canvas.width / 2;
 let height = canvas.height / 2;
-let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
+const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     canvas: canvas,
     ctx: canvas.getContext("2d"),
     width: canvas.width,
@@ -480,6 +479,28 @@ let game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
         { x: 300, y: 300 }
     ]
 });
+let resize = window.addEventListener("resize", () => {
+    console.log('resize');
+    canvas.width = window.outerWidth;
+    canvas.height = window.outerHeight;
+    game.setting.width = window.innerWidth;
+    game.setting.height = window.innerHeight;
+});
+window.addEventListener("devicemotion", accelerometerUpdate);
+let s = new DeviceAcceleration();
+function accelerometerUpdate(event) {
+    var aX = event.accelerationIncludingGravity.x * 10;
+    var aY = event.accelerationIncludingGravity.y * 10;
+    var aZ = event.accelerationIncludingGravity.z * 10;
+    document.querySelector("#button").innerHTML = aX;
+    document.querySelector("#button").innerHTML = aY;
+    document.querySelector("#button").innerHTML = aZ;
+    // ix aY is negative, switch rotation
+    // if (aY <0) {
+    //     aX = -aX - 180;
+    // }
+    // // document.querySelector("#block").style.transform="rotate("+aX+"deg)";
+}
 //# sourceMappingURL=index.js.map
 
 /***/ })

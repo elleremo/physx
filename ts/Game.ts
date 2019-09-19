@@ -59,14 +59,14 @@ let s = new Vector(4, 5);
 // }
 
 
-class Game {
+class Game extends Setting{
 
     set;
     render;
 
     constructor(setting:{}) {
 
-
+        super();
         // this.set.ctx = setting.canvas.getContext("2d");
         Setting.prototype.setting = setting;
         Setting.prototype.setting.Vpoints = [];

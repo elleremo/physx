@@ -15,7 +15,7 @@ export class Render extends Setting {
             this.setting.Vpoints.push(new Point({ x: p.x, y: p.y }, 5, p.type));
         }
         for (let k of this.setting.Vpoints) {
-            console.log(k);
+            // console.log(k);
         }
     }
     draw() {

@@ -39,7 +39,7 @@ export class Render extends Setting {
         }
 
         for (let k of this.setting.Vpoints) {
-            console.log(k);
+            // console.log(k);
         }
     }
 

@@ -41,10 +41,8 @@ class Point extends Vector {
         if (this.type === 'static')
             return;
         if (this.y + this.size >= this.setting.height) {
-            this.y = this.setting.height - this.size;
-            let o = this.oldy;
             let n = this.y;
-            this.y = o;
+            this.y = this.y = this.setting.height - this.size;
             this.oldy = n;
         }
         if (this.y - this.size < 0) {

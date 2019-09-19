@@ -55,8 +55,9 @@ let s = new Vector(4, 5);
 //     fixedPoints: Position;
 //     point: Position;
 // }
-class Game {
+class Game extends Setting {
     constructor(setting) {
+        super();
         // this.set.ctx = setting.canvas.getContext("2d");
         Setting.prototype.setting = setting;
         Setting.prototype.setting.Vpoints = [];
