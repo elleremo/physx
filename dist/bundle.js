@@ -174,7 +174,6 @@ class Game extends _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"] {
         _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting.Vpoints = [];
         this.render = new _Render__WEBPACK_IMPORTED_MODULE_1__["Render"]();
         console.log(this.render.setting);
-        this.render.animate();
         // this.init();
     }
 }
@@ -211,9 +210,7 @@ class Render extends Setting {
         for (let p of this.setting.points) {
             this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5, p.type));
         }
-        for (let k of this.setting.Vpoints) {
-            // console.log(k);
-        }
+        this.draw();
     }
     draw() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
@@ -355,7 +352,7 @@ class Point extends Vector {
         this.type = type;
         this.oldx = this.x - 2;
         this.oldy = this.y;
-        this.draw();
+        // this.draw();
         // this.vel.x = Math.random()*2 ;
         // this.vel.y = Math.random()*2 ;
     }
@@ -463,6 +460,7 @@ let dpr = window.devicePixelRatio;
 console.log(dpr);
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
+let button = document.getElementById('button');
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
 const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
@@ -491,7 +489,10 @@ let resize = window.addEventListener("resize", () => {
     game.setting.height = window.innerHeight;
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
-// window.addEventListener("devicemotion", accelerometerUpdate);
+// window.addEventListener("devicemotion", startButton);
+let start_button = button.addEventListener("click", () => {
+    game.render.animate();
+});
 // let s = new DeviceAcceleration();
 function accelerometerUpdate(event) {
     var aX = event.accelerationIncludingGravity.x * 10;

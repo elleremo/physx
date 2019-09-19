@@ -3,6 +3,7 @@ let dpr = window.devicePixelRatio;
 console.log(dpr);
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
+let button = document.getElementById('button');
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
 const game = new Game({
@@ -31,7 +32,10 @@ let resize = window.addEventListener("resize", () => {
     game.setting.height = window.innerHeight;
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
-// window.addEventListener("devicemotion", accelerometerUpdate);
+// window.addEventListener("devicemotion", startButton);
+let start_button = button.addEventListener("click", () => {
+    game.render.animate();
+});
 // let s = new DeviceAcceleration();
 function accelerometerUpdate(event) {
     var aX = event.accelerationIncludingGravity.x * 10;

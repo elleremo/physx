@@ -49,7 +49,7 @@ class Point extends Vector {
         this.type = type;
         this.oldx = this.x -2;
         this.oldy = this.y;
-        this.draw();
+        // this.draw();
         // this.vel.x = Math.random()*2 ;
         // this.vel.y = Math.random()*2 ;
     }

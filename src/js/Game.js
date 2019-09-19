@@ -63,7 +63,6 @@ class Game extends Setting {
         Setting.prototype.setting.Vpoints = [];
         this.render = new Render();
         console.log(this.render.setting);
-        this.render.animate();
         // this.init();
     }
 }

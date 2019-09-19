@@ -73,7 +73,7 @@ class Game extends Setting{
         this.render = new Render();
 
         console.log(this.render.setting);
-        this.render.animate();
+
         // this.init();
     }
 

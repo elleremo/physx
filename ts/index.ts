@@ -4,7 +4,7 @@ let dpr = window.devicePixelRatio;
 console.log(dpr);
 let canvas : HTMLCanvasElement = window.document.querySelector('canvas');
 let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-
+let  button = document.getElementById('button')
 
 canvas.width= document.body.clientWidth;
 canvas.height= document.body.clientHeight;
@@ -46,7 +46,10 @@ let resize  = window.addEventListener("resize", ()=>{
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 
-// window.addEventListener("devicemotion", accelerometerUpdate);
+// window.addEventListener("devicemotion", startButton);
+let start_button  = button.addEventListener("click", ()=>{
+   game.render.animate();
+});
 
 
 // let s = new DeviceAcceleration();

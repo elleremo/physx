@@ -14,9 +14,7 @@ export class Render extends Setting {
         for (let p of this.setting.points) {
             this.setting.Vpoints.push(new Point({ x: p.x, y: p.y }, 5, p.type));
         }
-        for (let k of this.setting.Vpoints) {
-            // console.log(k);
-        }
+        this.draw();
     }
     draw() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
