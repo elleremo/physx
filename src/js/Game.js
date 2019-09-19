@@ -59,6 +59,7 @@ class Game {
     constructor(setting) {
         // this.set.ctx = setting.canvas.getContext("2d");
         Setting.prototype.setting = setting;
+        Setting.prototype.setting.Vpoints = [];
         this.render = new Render();
         console.log(this.render.setting);
         this.render.animate();
