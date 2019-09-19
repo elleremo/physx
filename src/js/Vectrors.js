@@ -40,22 +40,25 @@ class Point extends Vector {
     move() {
         if (this.type === 'static')
             return;
-        if (this.y + this.size >= this.setting.height) {
+        if (this.y > this.setting.height - this.size) {
             let n = this.y;
-            this.y = this.y = this.setting.height - this.size;
+            this.y = this.setting.height - this.size;
             this.oldy = n;
         }
-        if (this.y - this.size < 0) {
-            this.oldy = 0 + this.size;
-            this.vel.y *= -1;
+        if (this.y < this.size) {
+            let n = this.y;
+            this.y = this.size;
+            this.oldy = n;
         }
-        if (this.x + this.size > this.setting.width) {
-            this.oldx = this.setting.width;
-            this.vel.x *= -1;
+        if (this.x > this.setting.width - this.size) {
+            let n = this.x;
+            this.x = this.setting.width - this.size;
+            this.oldx = n;
         }
-        if (this.x - this.size < 0) {
-            this.x = 0 + this.size;
-            this.vel.x *= -1;
+        if (this.x < this.size) {
+            let n = this.x;
+            this.x = this.size;
+            this.oldx = n;
         }
         // this.vel.y +=   this.grav;
         if (this.type !== 'static') {
@@ -71,7 +74,7 @@ class Point extends Vector {
         // this.oldy = this.y;
     }
     update() {
-        let lock = 50;
+        let lock = 500;
         for (let p2 of this.setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {

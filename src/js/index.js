@@ -1,13 +1,14 @@
 ﻿import { Game } from "./Game";
-console.log('gge');
+let dpr = window.devicePixelRatio;
+console.log(dpr);
 let canvas = window.document.querySelector('canvas');
+let ctx = canvas.getContext('2d');
+ctx.scale(1 / dpr, 1 / dpr);
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
-let width = canvas.width / 2;
-let height = canvas.height / 2;
 const game = new Game({
     canvas: canvas,
-    ctx: canvas.getContext("2d"),
+    ctx: ctx,
     width: canvas.width,
     height: canvas.height,
     // fixedPoints  : { x:width, y:0 },
@@ -24,13 +25,13 @@ const game = new Game({
 });
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
-    canvas.width = window.outerWidth;
-    canvas.height = window.outerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     game.setting.width = window.innerWidth;
     game.setting.height = window.innerHeight;
 });
-window.addEventListener("devicemotion", accelerometerUpdate);
-let s = new DeviceAcceleration();
+// window.addEventListener("devicemotion", accelerometerUpdate);
+// let s = new DeviceAcceleration();
 function accelerometerUpdate(event) {
     var aX = event.accelerationIncludingGravity.x * 10;
     var aY = event.accelerationIncludingGravity.y * 10;

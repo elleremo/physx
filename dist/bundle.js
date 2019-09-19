@@ -362,22 +362,25 @@ class Point extends Vector {
     move() {
         if (this.type === 'static')
             return;
-        if (this.y + this.size >= this.setting.height) {
+        if (this.y > this.setting.height - this.size) {
             let n = this.y;
-            this.y = this.y = this.setting.height - this.size;
+            this.y = this.setting.height - this.size;
             this.oldy = n;
         }
-        if (this.y - this.size < 0) {
-            this.oldy = 0 + this.size;
-            this.vel.y *= -1;
+        if (this.y < this.size) {
+            let n = this.y;
+            this.y = this.size;
+            this.oldy = n;
         }
-        if (this.x + this.size > this.setting.width) {
-            this.oldx = this.setting.width;
-            this.vel.x *= -1;
+        if (this.x > this.setting.width - this.size) {
+            let n = this.x;
+            this.x = this.setting.width - this.size;
+            this.oldx = n;
         }
-        if (this.x - this.size < 0) {
-            this.x = 0 + this.size;
-            this.vel.x *= -1;
+        if (this.x < this.size) {
+            let n = this.x;
+            this.x = this.size;
+            this.oldx = n;
         }
         // this.vel.y +=   this.grav;
         if (this.type !== 'static') {
@@ -393,7 +396,7 @@ class Point extends Vector {
         // this.oldy = this.y;
     }
     update() {
-        let lock = 50;
+        let lock = 500;
         for (let p2 of this.setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {
@@ -456,15 +459,16 @@ class Point extends Vector {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Game__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Game */ "./src/js/Game.js");
 ﻿
-console.log('gge');
+let dpr = window.devicePixelRatio;
+console.log(dpr);
 let canvas = window.document.querySelector('canvas');
+let ctx = canvas.getContext('2d');
+ctx.scale(1 / dpr, 1 / dpr);
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
-let width = canvas.width / 2;
-let height = canvas.height / 2;
 const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     canvas: canvas,
-    ctx: canvas.getContext("2d"),
+    ctx: ctx,
     width: canvas.width,
     height: canvas.height,
     // fixedPoints  : { x:width, y:0 },
@@ -481,13 +485,13 @@ const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
 });
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
-    canvas.width = window.outerWidth;
-    canvas.height = window.outerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     game.setting.width = window.innerWidth;
     game.setting.height = window.innerHeight;
 });
-window.addEventListener("devicemotion", accelerometerUpdate);
-let s = new DeviceAcceleration();
+// window.addEventListener("devicemotion", accelerometerUpdate);
+// let s = new DeviceAcceleration();
 function accelerometerUpdate(event) {
     var aX = event.accelerationIncludingGravity.x * 10;
     var aY = event.accelerationIncludingGravity.y * 10;
