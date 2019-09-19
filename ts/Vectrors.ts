@@ -99,7 +99,7 @@ class Point extends Vector {
 
     update() {
 
-        let lock = 500;
+        let lock = 100;
         for (let p2 of this.setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {

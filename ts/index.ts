@@ -5,7 +5,7 @@ console.log(dpr);
 let canvas : HTMLCanvasElement = window.document.querySelector('canvas');
 let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 
- ctx.scale(1/dpr,1/dpr);
+
 canvas.width= document.body.clientWidth;
 canvas.height= document.body.clientHeight;
 
@@ -35,7 +35,7 @@ const game = new Game({
     ]
 });
 
-
+// game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 let resize  = window.addEventListener("resize", ()=>{
     console.log('resize');
     canvas.width = window.innerWidth;
@@ -43,7 +43,7 @@ let resize  = window.addEventListener("resize", ()=>{
     game.setting.width = window.innerWidth;
     game.setting.height = window.innerHeight;
 
-
+    // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 
 // window.addEventListener("devicemotion", accelerometerUpdate);

@@ -3,7 +3,6 @@ let dpr = window.devicePixelRatio;
 console.log(dpr);
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
-ctx.scale(1 / dpr, 1 / dpr);
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
 const game = new Game({
@@ -23,12 +22,14 @@ const game = new Game({
         { x: 300, y: 300 }
     ]
 });
+// game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     game.setting.width = window.innerWidth;
     game.setting.height = window.innerHeight;
+    // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 // window.addEventListener("devicemotion", accelerometerUpdate);
 // let s = new DeviceAcceleration();

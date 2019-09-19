@@ -28,7 +28,7 @@ export class Render extends Setting {
         super();
         this.setting.ctx.shadowColor = 'rgba(65,152,211,0.65)';
         this.setting.ctx.shadowBlur = 10;
-        // this.setting.ctx;
+        // this.setting.ctx.scale( window.devicePixelRatio, window.devicePixelRatio);
 
         this.add();
     }

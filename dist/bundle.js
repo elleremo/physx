@@ -204,7 +204,7 @@ class Render extends Setting {
         this.points = [];
         this.setting.ctx.shadowColor = 'rgba(65,152,211,0.65)';
         this.setting.ctx.shadowBlur = 10;
-        // this.setting.ctx;
+        // this.setting.ctx.scale( window.devicePixelRatio, window.devicePixelRatio);
         this.add();
     }
     add() {
@@ -396,7 +396,7 @@ class Point extends Vector {
         // this.oldy = this.y;
     }
     update() {
-        let lock = 500;
+        let lock = 100;
         for (let p2 of this.setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {
@@ -463,7 +463,6 @@ let dpr = window.devicePixelRatio;
 console.log(dpr);
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
-ctx.scale(1 / dpr, 1 / dpr);
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
 const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
@@ -483,12 +482,14 @@ const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
         { x: 300, y: 300 }
     ]
 });
+// game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     game.setting.width = window.innerWidth;
     game.setting.height = window.innerHeight;
+    // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 // window.addEventListener("devicemotion", accelerometerUpdate);
 // let s = new DeviceAcceleration();
