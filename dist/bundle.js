@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-1c1cbff865770f01";
+/******/ 	  var id = "webpack-livereload-plugin-script-4cfc43cd14caa7d0";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -208,7 +208,7 @@ class Render extends Setting {
     }
     add() {
         for (let p of this.setting.points) {
-            this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5, p.type));
+            this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Node"]({ x: p.x, y: p.y }, 5, p.type));
         }
         this.draw();
     }
@@ -309,13 +309,13 @@ class Render extends Setting {
 /*!****************************!*\
   !*** ./src/js/Vectrors.js ***!
   \****************************/
-/*! exports provided: Vector, Point */
+/*! exports provided: Vector, Node */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return Vector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Point", function() { return Point; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return Node; });
 /* harmony import */ var _Render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Render */ "./src/js/Render.js");
 ﻿
 class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
@@ -338,7 +338,19 @@ class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
-class Point extends Vector {
+class StructManager {
+}
+class Struct {
+    constructor() {
+        this.type = 'web' || false;
+    }
+}
+class Edge extends Vector {
+    get last() {
+        return this.nodes[this.nodes.length];
+    }
+}
+class Node extends Vector {
     constructor(pos, size, type) {
         super(pos.x, pos.y);
         this.type = 'Point';
@@ -350,7 +362,7 @@ class Point extends Vector {
         // this.pos = new Vector();
         this.size = size;
         this.type = type;
-        this.oldx = this.x - 2;
+        this.oldx = this.x;
         this.oldy = this.y;
         // this.draw();
         // this.vel.x = Math.random()*2 ;
@@ -359,10 +371,11 @@ class Point extends Vector {
     move() {
         if (this.type === 'static')
             return;
-        if (this.y > this.setting.height - this.size) {
+        if (this.y >= this.setting.height - this.size) {
             let n = this.y;
             this.y = this.setting.height - this.size;
             this.oldy = n;
+            this.oldx = this.x - (this.x - this.oldx) * 0.1;
         }
         if (this.y < this.size) {
             let n = this.y;
@@ -474,13 +487,15 @@ const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
         { x: 400, y: 50 },
         { x: 350, y: 150 },
         { x: 250, y: 200 },
-        { x: 250, y: 200 },
-        { x: 250, y: 200 },
-        { x: 250, y: 200 },
+        //
+        //
+        // { x: 250, y: 200 },
+        //
+        // { x: 250, y: 200 },
         { x: 300, y: 300 }
     ]
 });
-// game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
+game.render.animate();
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
     canvas.width = window.innerWidth;
@@ -489,24 +504,44 @@ let resize = window.addEventListener("resize", () => {
     game.setting.height = window.innerHeight;
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
-// window.addEventListener("devicemotion", startButton);
-let start_button = button.addEventListener("click", () => {
-    game.render.animate();
-});
+// let start_button  = button.addEventListener("click", ()=>{
+//    game.render.animate();
+// });
+let pushDot = () => {
+    canvas.addEventListener('click', (e) => {
+        let x = e.offsetX;
+        let y = e.offsetY;
+    });
+};
+let log = console.log;
 // let s = new DeviceAcceleration();
-function accelerometerUpdate(event) {
-    var aX = event.accelerationIncludingGravity.x * 10;
-    var aY = event.accelerationIncludingGravity.y * 10;
-    var aZ = event.accelerationIncludingGravity.z * 10;
-    document.querySelector("#button").innerHTML = aX;
-    document.querySelector("#button").innerHTML = aY;
-    document.querySelector("#button").innerHTML = aZ;
-    // ix aY is negative, switch rotation
-    // if (aY <0) {
-    //     aX = -aX - 180;
-    // }
-    // // document.querySelector("#block").style.transform="rotate("+aX+"deg)";
-}
+// function accelerometerUpdate(event) {
+//     var aX = event.accelerationIncludingGravity.x*10;
+//     var aY = event.accelerationIncludingGravity.y*10;
+//     var aZ = event.accelerationIncludingGravity.z*10;
+//
+//
+//     document.querySelector("#button").innerHTML = aX;
+//     document.querySelector("#button").innerHTML = aY;
+//     document.querySelector("#button").innerHTML = aZ;
+//
+//     // ix aY is negative, switch rotation
+//     // if (aY <0) {
+//     //     aX = -aX - 180;
+//     // }
+//     // // document.querySelector("#block").style.transform="rotate("+aX+"deg)";
+//
+// }
+// let OM = class  {
+//     x:number;
+//     y:number;
+//     constructor(x,y){
+//         this.x = x ;
+//         this.y = y ;
+//     }
+//     foo () {
+//         log(this.x,this.y);
+//     };
 //# sourceMappingURL=index.js.map
 
 /***/ })

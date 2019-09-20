@@ -1,4 +1,4 @@
-import {Vector, Point } from "./Vectrors"
+import {Vector, Node } from "./Vectrors"
 import {Setting, TSetting, ISetting,  Render} from "./Render";
 
 let s = new Vector(4, 5);

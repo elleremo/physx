@@ -19,7 +19,19 @@ class Vector extends Setting {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
-class Point extends Vector {
+class StructManager {
+}
+class Struct {
+    constructor() {
+        this.type = 'web' || 'line';
+    }
+}
+class Edge extends Vector {
+    get last() {
+        return this.nodes[this.nodes.length];
+    }
+}
+class Node extends Vector {
     constructor(pos, size, type) {
         super(pos.x, pos.y);
         this.type = 'Point';
@@ -31,7 +43,7 @@ class Point extends Vector {
         // this.pos = new Vector();
         this.size = size;
         this.type = type;
-        this.oldx = this.x - 2;
+        this.oldx = this.x;
         this.oldy = this.y;
         // this.draw();
         // this.vel.x = Math.random()*2 ;
@@ -40,10 +52,11 @@ class Point extends Vector {
     move() {
         if (this.type === 'static')
             return;
-        if (this.y > this.setting.height - this.size) {
+        if (this.y >= this.setting.height - this.size) {
             let n = this.y;
             this.y = this.setting.height - this.size;
             this.oldy = n;
+            this.oldx = this.x - (this.x - this.oldx) * 0.1;
         }
         if (this.y < this.size) {
             let n = this.y;
@@ -121,5 +134,5 @@ class Point extends Vector {
         // this.setting.ctx.stroke();
     }
 }
-export { Vector, Point };
+export { Vector, Node };
 //# sourceMappingURL=Vectrors.js.map

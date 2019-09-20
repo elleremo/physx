@@ -31,7 +31,25 @@ class Vector extends Setting {
     }
 }
 
-class Point extends Vector {
+class StructManager {
+    list: []
+}
+
+class Struct {
+    edges: [Edge];
+    type: string = 'web' || 'line';
+
+}
+
+class Edge extends Vector{
+    nodes: [ Node ];
+
+    get last() {
+        return this.nodes[this.nodes.length];
+    }
+}
+
+class Node extends Vector {
     type: string = 'Point';
     size: number;
     vel: Vector = new Vector(0, 0);
@@ -47,7 +65,7 @@ class Point extends Vector {
         // this.pos = new Vector();
         this.size = size;
         this.type = type;
-        this.oldx = this.x -2;
+        this.oldx = this.x;
         this.oldy = this.y;
         // this.draw();
         // this.vel.x = Math.random()*2 ;
@@ -59,10 +77,11 @@ class Point extends Vector {
 
         if (this.type === 'static') return;
 
-        if (this.y  > this.setting.height - this.size ) {
+        if (this.y  >= this.setting.height - this.size ) {
             let n = this.y;
             this.y = this.setting.height  - this.size;
             this.oldy = n;
+            this.oldx = this.x - (this.x-this.oldx)*0.1;
         }
         if (this.y < this.size) {
             let n = this.y;
@@ -156,4 +175,4 @@ class Point extends Vector {
 
 }
 
-export {Vector, Point}
+export {Vector, Node}
