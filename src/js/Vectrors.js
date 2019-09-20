@@ -15,20 +15,27 @@ class Vector extends Setting {
     static vectorAB(a, b) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
-    static pointDistance(a, b) {
+    static distanceAB(a, b) {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
 class StructManager {
 }
 class Struct {
-    constructor() {
+    constructor(type) {
         this.type = 'web' || 'line';
+        this.type = type;
+        return this;
+    }
+    add(edge) {
+        this.edges.push(edge);
     }
 }
-class Edge extends Vector {
-    get last() {
-        return this.nodes[this.nodes.length];
+class Edge {
+    constructor(first, last) {
+        this.firstNode = first;
+        this.lastNode = last;
+        this.baseLength = Vector.distanceAB(first, last);
     }
 }
 class Node extends Vector {

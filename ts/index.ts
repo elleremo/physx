@@ -38,6 +38,8 @@ const game = new Game({
 game.render.animate();
 
  let resize  = window.addEventListener("resize", ()=>{
+
+
     console.log('resize');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;

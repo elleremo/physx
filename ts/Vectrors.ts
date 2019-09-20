@@ -22,31 +22,44 @@ class Vector extends Setting {
         return new Vector(this.x / length, this.y / length);
     }
 
-    static vectorAB(a, b) {
+    static vectorAB(a:Node, b:Node) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
 
-    static pointDistance(a, b) {
+    static  distanceAB(a:Node, b:Node) {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
 
 class StructManager {
-    list: []
+    struct: Struct[];
 }
 
 class Struct {
-    edges: [Edge];
+    edges: Edge[];
     type: string = 'web' || 'line';
 
+    constructor (type: string){
+        this.type = type;
+        return this;
+    }
+
+    add (edge: Edge) {
+        this.edges.push(edge)
+    }
 }
 
-class Edge extends Vector{
-    nodes: [ Node ];
+class Edge {
+    firstNode: Node;
+    lastNode: Node;
+    baseLength: number;
 
-    get last() {
-        return this.nodes[this.nodes.length];
+    constructor(first: Node,last: Node) {
+            this.firstNode = first;
+            this.lastNode = last;
+            this.baseLength = Vector.distanceAB(first,last);
     }
+
 }
 
 class Node extends Vector {

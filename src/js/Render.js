@@ -10,6 +10,9 @@ export class Render extends Setting {
         // this.setting.ctx.scale( window.devicePixelRatio, window.devicePixelRatio);
         this.add();
     }
+    clear() {
+        this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
+    }
     add() {
         for (let p of this.setting.points) {
             this.setting.Vpoints.push(new Node({ x: p.x, y: p.y }, 5, p.type));
@@ -74,9 +77,12 @@ export class Render extends Setting {
             }
         }
     }
+    stopAnimate() {
+        cancelAnimationFrame(this.RID);
+    }
     animate() {
         this.draw();
-        requestAnimationFrame(() => this.animate());
+        this.RID = requestAnimationFrame(() => this.animate());
         // setTimeout(()=>this.animate(), 100)
         // function guk(){
         //

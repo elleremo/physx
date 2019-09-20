@@ -206,6 +206,9 @@ class Render extends Setting {
         // this.setting.ctx.scale( window.devicePixelRatio, window.devicePixelRatio);
         this.add();
     }
+    clear() {
+        this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
+    }
     add() {
         for (let p of this.setting.points) {
             this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Node"]({ x: p.x, y: p.y }, 5, p.type));
@@ -270,9 +273,12 @@ class Render extends Setting {
             }
         }
     }
+    stopAnimate() {
+        cancelAnimationFrame(this.RID);
+    }
     animate() {
         this.draw();
-        requestAnimationFrame(() => this.animate());
+        this.RID = requestAnimationFrame(() => this.animate());
         // setTimeout(()=>this.animate(), 100)
         // function guk(){
         //
@@ -334,20 +340,27 @@ class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
     static vectorAB(a, b) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
-    static pointDistance(a, b) {
+    static distanceAB(a, b) {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
 class StructManager {
 }
 class Struct {
-    constructor() {
+    constructor(type) {
         this.type = 'web' || false;
+        this.type = type;
+        return this;
+    }
+    add(edge) {
+        this.edges.push(edge);
     }
 }
-class Edge extends Vector {
-    get last() {
-        return this.nodes[this.nodes.length];
+class Edge {
+    constructor(first, last) {
+        this.firstNode = first;
+        this.lastNode = last;
+        this.baseLength = Vector.distanceAB(first, last);
     }
 }
 class Node extends Vector {
