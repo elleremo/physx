@@ -9,8 +9,6 @@ let  button = document.getElementById('button')
 canvas.width= document.body.clientWidth;
 canvas.height= document.body.clientHeight;
 
-
-
 const game = new Game({
     canvas: canvas,
     ctx: ctx,
@@ -37,7 +35,7 @@ const game = new Game({
 
 game.render.animate();
 
- let resize  = window.addEventListener("resize", ()=>{
+let resize  = window.addEventListener("resize", ()=>{
 
 
     console.log('resize');
