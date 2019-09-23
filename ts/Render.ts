@@ -1,4 +1,4 @@
-import {Vector, Node} from "./Vectrors";
+import {Vector, Point} from "./Vectrors";
 
 export type TSetting = {
     canvas: HTMLCanvasElement;
@@ -6,7 +6,7 @@ export type TSetting = {
     width: number;
     height: number;
     points: [{}];
-    Vpoints: [Node];
+    Vpoints: [Point];
 }
 
 export interface ISetting {
@@ -21,7 +21,7 @@ export class Setting {
 
 export class Render extends Setting {
 
-    points: Node[] = [];
+    points: Point[] = [];
 
 
     constructor() {
@@ -37,9 +37,13 @@ export class Render extends Setting {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
     }
 
+    addOncePoint(point: Point){
+        this.setting.Vpoints.push(point);
+    }
+
     add() {
         for (let p of this.setting.points) {
-            this.setting.Vpoints.push(new Node({x: p.x, y: p.y}, 5, p.type))
+            this.setting.Vpoints.push(new Point({x: p.x, y: p.y}, 5, p.type))
         }
 
          this.draw()

@@ -1,4 +1,4 @@
-﻿import { Node } from "./Vectrors";
+﻿import { Point } from "./Vectrors";
 export class Setting {
 }
 export class Render extends Setting {
@@ -13,9 +13,12 @@ export class Render extends Setting {
     clear() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
     }
+    addOncePoint(point) {
+        this.setting.Vpoints.push(point);
+    }
     add() {
         for (let p of this.setting.points) {
-            this.setting.Vpoints.push(new Node({ x: p.x, y: p.y }, 5, p.type));
+            this.setting.Vpoints.push(new Point({ x: p.x, y: p.y }, 5, p.type));
         }
         this.draw();
     }

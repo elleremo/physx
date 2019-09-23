@@ -2,7 +2,7 @@ import {Setting} from "./Render";
 
 type Position = { x: number, y: number };
 
-class Vector extends Setting {
+export class Vector extends Setting {
     x: number;
     y: number;
 
@@ -22,20 +22,20 @@ class Vector extends Setting {
         return new Vector(this.x / length, this.y / length);
     }
 
-    static vectorAB(a:Node, b:Node) {
+    static vectorAB(a:Point, b:Point) {
         return new Vector(b.x - a.x, b.y - a.y);
     }
 
-    static  distanceAB(a:Node, b:Node) {
+    static  distanceAB(a:Point, b:Point) {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
 
-class StructManager {
+export class StructManager {
     struct: Struct[];
 }
 
-class Struct {
+export class Struct {
     edges: Edge[];
     type: string = 'web' || 'line';
 
@@ -49,12 +49,12 @@ class Struct {
     }
 }
 
-class Edge {
-    firstNode: Node;
-    lastNode: Node;
+export class Edge {
+    firstNode: Point;
+    lastNode: Point;
     baseLength: number;
 
-    constructor(first: Node,last: Node) {
+    constructor(first: Point, last: Point) {
             this.firstNode = first;
             this.lastNode = last;
             this.baseLength = Vector.distanceAB(first,last);
@@ -62,18 +62,18 @@ class Edge {
 
 }
 
-class Node extends Vector {
+export class Point extends Vector {
     type: string = 'Point';
     size: number;
     vel: Vector = new Vector(0, 0);
-    acc: Vector = new Vector(0, 0.5  );
-    // grav : number = 0.05;
+    acc: Vector = new Vector(0, 0 );
+    grav : number = 0.2;
 
     oldx: number = 0;
     oldy: number = 0;
 
 
-    constructor(pos: Position, size: number, type: string) {
+    constructor(pos: Position, size: number, type: string = 'Point') {
         super(pos.x, pos.y);
         // this.pos = new Vector();
         this.size = size;
@@ -90,37 +90,50 @@ class Node extends Vector {
 
         if (this.type === 'static') return;
 
-        if (this.y  >= this.setting.height - this.size ) {
-            let n = this.y;
-            this.y = this.setting.height  - this.size;
-            this.oldy = n;
-            this.oldx = this.x - (this.x-this.oldx)*0.1;
-        }
-        if (this.y < this.size) {
-            let n = this.y;
-            this.y = this.size  ;
-            this.oldy =   n;
-        }
-        if (this.x > this.setting.width - this.size) {
-            let n = this.x;
-            this.x = this.setting.width -this.size;
-            this.oldx = n;
-        }
-        if (this.x <   this.size ) {
-            let n = this.x;
-            this.x = this.size;
-            this.oldx = n;
-        }
-        // this.vel.y +=   this.grav;
-        if (this.type !== 'static') {
-            let tempx = this.x;
-            let tempy = this.y;
-            this.x +=  this.x - this.oldx + this.acc.x ** 2;
-            this.y +=  this.y - this.oldy + this.acc.y ** 2;
 
-            this.oldx = tempx ;
-            this.oldy = tempy;
-        };
+        // if (this.y < this.size) {
+        //     let n = this.y;
+        //     this.y = this.size  ;
+        //     this.oldy =   n;
+        // }
+        // if (this.x > this.setting.width - this.size) {
+        //     let n = this.x;
+        //     this.x = this.setting.width -this.size;
+        //     this.oldx = n;
+        // }
+        // if (this.x <   this.size ) {
+        //     let n = this.x;
+        //     this.x = this.size;
+        //     this.oldx = n;
+        // }
+        // this.vel.y +=   this.grav;
+        // if (this.type !== 'static') {
+        //     let tempx = this.x;
+        //     let tempy = this.y;
+        //
+        //     this.acc.y += this.grav;
+        //     this.x +=  this.x - this.oldx + this.acc.x ** 2;
+        //     this.y +=  this.y - this.oldy + this.acc.y ** 2;
+        //
+        //     this.oldx = tempx ;
+        //     this.oldy = tempy;
+        // };
+        if (this.y  > this.setting.height - this.size ) {
+            // let n = this.y;
+            // let o = this.oldy;
+
+            // this.oldy = this.y + (n-o) ;
+            this.y =  this.setting.height - this.size;
+            // this.oldx = this.x - (this.x-this.oldx)*0.1;
+            this.vel.y = -this.vel.y;
+
+        }
+        this.vel.y += this.acc.y + this.grav;
+        this.vel.x += this.acc.x ;
+        this.x += this.vel.x;
+        this.y += this.vel.y ;
+        console.log(this.vel.y);
+
 
 
         // this.oldx = this.x ;
@@ -138,7 +151,7 @@ class Node extends Vector {
                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
                 let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
                 let V1V2Length = V1V2.length; // дистаниця
-                let diff = (V1V2Length - lock)/20; // разница в длине
+                let diff = (V1V2Length - lock)/20 ; // разница в длине
                 //  let f =    ((power  * diff) + p1.vel.x*r + p1.acc.x;
                 //  let fy =  (power * diff) + p1.vel.y*r + p1.acc.y;
                 //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
@@ -153,15 +166,20 @@ class Node extends Vector {
                 //  p1.acc.x +=  ( fVector.x * f ) ;
                 //  p1.acc.y += (fVector.y * fy) ;
 
-                if (this.type !== 'static') {
-                    this.x += V1V2_Normalize.x * diff  ;
-                    this.y += V1V2_Normalize.y * diff  ;
 
-                }
-                if (p2.type !== 'static') {
-                    p2.x -= V1V2_Normalize.x * diff;
-                    p2.y -= V1V2_Normalize.y * diff;
-                }
+
+
+                    if (this.type !== 'static') {
+                        this.vel.x += V1V2_Normalize.x * diff  ;
+                        this.vel.y += V1V2_Normalize.y * diff  ;
+
+                    }
+                    if (p2.type !== 'static') {
+                        p2.x -= V1V2_Normalize.x * diff;
+                        p2.y -= V1V2_Normalize.y * diff;
+                    }
+
+
 
                 // let plus = (diff / (80));
                 // p1.x += (plus * fVector.x);
@@ -188,4 +206,4 @@ class Node extends Vector {
 
 }
 
-export {Vector, Node}
+

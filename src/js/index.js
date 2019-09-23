@@ -1,6 +1,7 @@
 ﻿import { Game } from "./Game";
+import { Point } from "./Vectrors";
+let log = console.log;
 let dpr = window.devicePixelRatio;
-console.log(dpr);
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
 let button = document.getElementById('button');
@@ -14,20 +15,17 @@ const game = new Game({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
-        { x: 400, y: 50 },
-        { x: 350, y: 150 },
-        { x: 250, y: 200 },
-        //
-        //
-        // { x: 250, y: 200 },
-        //
-        // { x: 250, y: 200 },
-        { x: 300, y: 300 }
+    // { x: 400, y: 50}
+    // //
+    // // { x: 250, y: 200 },
+    //
+    //
+    // { x: 300,  y: 300}
     ]
 });
 game.render.animate();
 let resize = window.addEventListener("resize", () => {
-    console.log('resize');
+    // console.log('resize');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     game.setting.width = window.innerWidth;
@@ -37,13 +35,14 @@ let resize = window.addEventListener("resize", () => {
 // let start_button  = button.addEventListener("click", ()=>{
 //    game.render.animate();
 // });
-let pushDot = () => {
-    canvas.addEventListener('click', (e) => {
-        let x = e.offsetX;
-        let y = e.offsetY;
-    });
-};
-let log = console.log;
+let pushDot = canvas.addEventListener("mousedown", (e) => {
+    let x = e.offsetX;
+    let y = e.offsetY;
+    // e.
+    let point = new Point({ x, y }, 5);
+    log(e);
+    game.addPoint(point);
+});
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {
 //     var aX = event.accelerationIncludingGravity.x*10;
@@ -62,14 +61,4 @@ let log = console.log;
 //     // // document.querySelector("#block").style.transform="rotate("+aX+"deg)";
 //
 // }
-// let OM = class  {
-//     x:number;
-//     y:number;
-//     constructor(x,y){
-//         this.x = x ;
-//         this.y = y ;
-//     }
-//     foo () {
-//         log(this.x,this.y);
-//     };
 //# sourceMappingURL=index.js.map

@@ -1,5 +1,5 @@
 ﻿import { Setting } from "./Render";
-class Vector extends Setting {
+export class Vector extends Setting {
     constructor(x, y) {
         super();
         this.x = x || 0;
@@ -19,9 +19,9 @@ class Vector extends Setting {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
-class StructManager {
+export class StructManager {
 }
-class Struct {
+export class Struct {
     constructor(type) {
         this.type = 'web' || 'line';
         this.type = type;
@@ -31,20 +31,20 @@ class Struct {
         this.edges.push(edge);
     }
 }
-class Edge {
+export class Edge {
     constructor(first, last) {
         this.firstNode = first;
         this.lastNode = last;
         this.baseLength = Vector.distanceAB(first, last);
     }
 }
-class Node extends Vector {
-    constructor(pos, size, type) {
+export class Point extends Vector {
+    constructor(pos, size, type = 'Point') {
         super(pos.x, pos.y);
         this.type = 'Point';
         this.vel = new Vector(0, 0);
-        this.acc = new Vector(0, 0.5);
-        // grav : number = 0.05;
+        this.acc = new Vector(0, 0);
+        this.grav = 0.2;
         this.oldx = 0;
         this.oldy = 0;
         // this.pos = new Vector();
@@ -59,37 +59,46 @@ class Node extends Vector {
     move() {
         if (this.type === 'static')
             return;
-        if (this.y >= this.setting.height - this.size) {
-            let n = this.y;
-            this.y = this.setting.height - this.size;
-            this.oldy = n;
-            this.oldx = this.x - (this.x - this.oldx) * 0.1;
-        }
-        if (this.y < this.size) {
-            let n = this.y;
-            this.y = this.size;
-            this.oldy = n;
-        }
-        if (this.x > this.setting.width - this.size) {
-            let n = this.x;
-            this.x = this.setting.width - this.size;
-            this.oldx = n;
-        }
-        if (this.x < this.size) {
-            let n = this.x;
-            this.x = this.size;
-            this.oldx = n;
-        }
+        // if (this.y < this.size) {
+        //     let n = this.y;
+        //     this.y = this.size  ;
+        //     this.oldy =   n;
+        // }
+        // if (this.x > this.setting.width - this.size) {
+        //     let n = this.x;
+        //     this.x = this.setting.width -this.size;
+        //     this.oldx = n;
+        // }
+        // if (this.x <   this.size ) {
+        //     let n = this.x;
+        //     this.x = this.size;
+        //     this.oldx = n;
+        // }
         // this.vel.y +=   this.grav;
-        if (this.type !== 'static') {
-            let tempx = this.x;
-            let tempy = this.y;
-            this.x += this.x - this.oldx + this.acc.x ** 2;
-            this.y += this.y - this.oldy + this.acc.y ** 2;
-            this.oldx = tempx;
-            this.oldy = tempy;
+        // if (this.type !== 'static') {
+        //     let tempx = this.x;
+        //     let tempy = this.y;
+        //
+        //     this.acc.y += this.grav;
+        //     this.x +=  this.x - this.oldx + this.acc.x ** 2;
+        //     this.y +=  this.y - this.oldy + this.acc.y ** 2;
+        //
+        //     this.oldx = tempx ;
+        //     this.oldy = tempy;
+        // };
+        if (this.y > this.setting.height - this.size) {
+            // let n = this.y;
+            // let o = this.oldy;
+            // this.oldy = this.y + (n-o) ;
+            this.y = this.setting.height - this.size;
+            // this.oldx = this.x - (this.x-this.oldx)*0.1;
+            this.vel.y = -this.vel.y;
         }
-        ;
+        this.vel.y += this.acc.y + this.grav;
+        this.vel.x += this.acc.x;
+        this.x += this.vel.x;
+        this.y += this.vel.y;
+        console.log(this.vel.y);
         // this.oldx = this.x ;
         // this.oldy = this.y;
     }
@@ -116,8 +125,8 @@ class Node extends Vector {
                 //  p1.acc.x +=  ( fVector.x * f ) ;
                 //  p1.acc.y += (fVector.y * fy) ;
                 if (this.type !== 'static') {
-                    this.x += V1V2_Normalize.x * diff;
-                    this.y += V1V2_Normalize.y * diff;
+                    this.vel.x += V1V2_Normalize.x * diff;
+                    this.vel.y += V1V2_Normalize.y * diff;
                 }
                 if (p2.type !== 'static') {
                     p2.x -= V1V2_Normalize.x * diff;
@@ -141,5 +150,4 @@ class Node extends Vector {
         // this.setting.ctx.stroke();
     }
 }
-export { Vector, Node };
 //# sourceMappingURL=Vectrors.js.map

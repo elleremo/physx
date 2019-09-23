@@ -1,4 +1,4 @@
-import {Vector, Node } from "./Vectrors"
+import {Vector, Point, Struct, Edge, StructManager} from "./Vectrors"
 import {Setting, TSetting, ISetting,  Render} from "./Render";
 
 let s = new Vector(4, 5);
@@ -62,7 +62,8 @@ let s = new Vector(4, 5);
 class Game extends Setting{
 
     set;
-    render;
+    render: Render;
+    structManager: StructManager;
 
     constructor(setting:{}) {
 
@@ -71,10 +72,14 @@ class Game extends Setting{
         Setting.prototype.setting = setting;
         Setting.prototype.setting.Vpoints = [];
         this.render = new Render();
-
+        this.structManager = new StructManager();
         console.log(this.render.setting);
 
         // this.init();
+    }
+
+    addPoint(point: Point){
+        this.render.addOncePoint(point);
     }
 
     // init() {

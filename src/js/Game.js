@@ -1,4 +1,4 @@
-﻿import { Vector } from "./Vectrors";
+﻿import { Vector, StructManager } from "./Vectrors";
 import { Setting, Render } from "./Render";
 let s = new Vector(4, 5);
 //
@@ -62,8 +62,12 @@ class Game extends Setting {
         Setting.prototype.setting = setting;
         Setting.prototype.setting.Vpoints = [];
         this.render = new Render();
+        this.structManager = new StructManager();
         console.log(this.render.setting);
         // this.init();
+    }
+    addPoint(point) {
+        this.render.addOncePoint(point);
     }
 }
 export { Game };

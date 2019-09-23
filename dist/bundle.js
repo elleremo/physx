@@ -80,6 +80,17 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/
+/******/ 	// webpack-livereload-plugin
+/******/ 	(function() {
+/******/ 	  if (typeof window === "undefined") { return };
+/******/ 	  var id = "webpack-livereload-plugin-script-0782ce25e9b7396c";
+/******/ 	  if (document.getElementById(id)) { return; }
+/******/ 	  var el = document.createElement("script");
+/******/ 	  el.id = id;
+/******/ 	  el.async = true;
+/******/ 	  el.src = "//" + location.hostname + ":35729/livereload.js";
+/******/ 	  document.getElementsByTagName("head")[0].appendChild(el);
+/******/ 	}());
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = "./src/js/index.js");
 /******/ })
@@ -162,8 +173,12 @@ class Game extends _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"] {
         _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting = setting;
         _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting.Vpoints = [];
         this.render = new _Render__WEBPACK_IMPORTED_MODULE_1__["Render"]();
+        this.structManager = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["StructManager"]();
         console.log(this.render.setting);
         // this.init();
+    }
+    addPoint(point) {
+        this.render.addOncePoint(point);
     }
 }
 
@@ -198,9 +213,12 @@ class Render extends Setting {
     clear() {
         this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
     }
+    addOncePoint(point) {
+        this.setting.Vpoints.push(point);
+    }
     add() {
         for (let p of this.setting.points) {
-            this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Node"]({ x: p.x, y: p.y }, 5, p.type));
+            this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5, p.type));
         }
         this.draw();
     }
@@ -304,13 +322,16 @@ class Render extends Setting {
 /*!****************************!*\
   !*** ./src/js/Vectrors.js ***!
   \****************************/
-/*! exports provided: Vector, Node */
+/*! exports provided: Vector, StructManager, Struct, Edge, Point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return Vector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return Node; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StructManager", function() { return StructManager; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Struct", function() { return Struct; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return Edge; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Point", function() { return Point; });
 /* harmony import */ var _Render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Render */ "./src/js/Render.js");
 ﻿
 class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
@@ -352,13 +373,13 @@ class Edge {
         this.baseLength = Vector.distanceAB(first, last);
     }
 }
-class Node extends Vector {
-    constructor(pos, size, type) {
+class Point extends Vector {
+    constructor(pos, size, type = 'Point') {
         super(pos.x, pos.y);
         this.type = 'Point';
         this.vel = new Vector(0, 0);
-        this.acc = new Vector(0, 0.5);
-        // grav : number = 0.05;
+        this.acc = new Vector(0, 0);
+        this.grav = 0.2;
         this.oldx = 0;
         this.oldy = 0;
         // this.pos = new Vector();
@@ -373,37 +394,46 @@ class Node extends Vector {
     move() {
         if (this.type === 'static')
             return;
-        if (this.y >= this.setting.height - this.size) {
-            let n = this.y;
-            this.y = this.setting.height - this.size;
-            this.oldy = n;
-            this.oldx = this.x - (this.x - this.oldx) * 0.1;
-        }
-        if (this.y < this.size) {
-            let n = this.y;
-            this.y = this.size;
-            this.oldy = n;
-        }
-        if (this.x > this.setting.width - this.size) {
-            let n = this.x;
-            this.x = this.setting.width - this.size;
-            this.oldx = n;
-        }
-        if (this.x < this.size) {
-            let n = this.x;
-            this.x = this.size;
-            this.oldx = n;
-        }
+        // if (this.y < this.size) {
+        //     let n = this.y;
+        //     this.y = this.size  ;
+        //     this.oldy =   n;
+        // }
+        // if (this.x > this.setting.width - this.size) {
+        //     let n = this.x;
+        //     this.x = this.setting.width -this.size;
+        //     this.oldx = n;
+        // }
+        // if (this.x <   this.size ) {
+        //     let n = this.x;
+        //     this.x = this.size;
+        //     this.oldx = n;
+        // }
         // this.vel.y +=   this.grav;
-        if (this.type !== 'static') {
-            let tempx = this.x;
-            let tempy = this.y;
-            this.x += this.x - this.oldx + this.acc.x ** 2;
-            this.y += this.y - this.oldy + this.acc.y ** 2;
-            this.oldx = tempx;
-            this.oldy = tempy;
+        // if (this.type !== 'static') {
+        //     let tempx = this.x;
+        //     let tempy = this.y;
+        //
+        //     this.acc.y += this.grav;
+        //     this.x +=  this.x - this.oldx + this.acc.x ** 2;
+        //     this.y +=  this.y - this.oldy + this.acc.y ** 2;
+        //
+        //     this.oldx = tempx ;
+        //     this.oldy = tempy;
+        // };
+        if (this.y > this.setting.height - this.size) {
+            // let n = this.y;
+            // let o = this.oldy;
+            // this.oldy = this.y + (n-o) ;
+            this.y = this.setting.height - this.size;
+            // this.oldx = this.x - (this.x-this.oldx)*0.1;
+            this.vel.y = -this.vel.y;
         }
-        ;
+        this.vel.y += this.acc.y + this.grav;
+        this.vel.x += this.acc.x;
+        this.x += this.vel.x;
+        this.y += this.vel.y;
+        console.log(this.vel.y);
         // this.oldx = this.x ;
         // this.oldy = this.y;
     }
@@ -430,8 +460,8 @@ class Node extends Vector {
                 //  p1.acc.x +=  ( fVector.x * f ) ;
                 //  p1.acc.y += (fVector.y * fy) ;
                 if (this.type !== 'static') {
-                    this.x += V1V2_Normalize.x * diff;
-                    this.y += V1V2_Normalize.y * diff;
+                    this.vel.x += V1V2_Normalize.x * diff;
+                    this.vel.y += V1V2_Normalize.y * diff;
                 }
                 if (p2.type !== 'static') {
                     p2.x -= V1V2_Normalize.x * diff;
@@ -455,7 +485,6 @@ class Node extends Vector {
         // this.setting.ctx.stroke();
     }
 }
-
 //# sourceMappingURL=Vectrors.js.map
 
 /***/ }),
@@ -470,9 +499,11 @@ class Node extends Vector {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Game__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Game */ "./src/js/Game.js");
+/* harmony import */ var _Vectrors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Vectrors */ "./src/js/Vectrors.js");
 ﻿
+
+let log = console.log;
 let dpr = window.devicePixelRatio;
-console.log(dpr);
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
 let button = document.getElementById('button');
@@ -486,20 +517,17 @@ const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
-        { x: 400, y: 50 },
-        { x: 350, y: 150 },
-        { x: 250, y: 200 },
-        //
-        //
-        // { x: 250, y: 200 },
-        //
-        // { x: 250, y: 200 },
-        { x: 300, y: 300 }
+    // { x: 400, y: 50}
+    // //
+    // // { x: 250, y: 200 },
+    //
+    //
+    // { x: 300,  y: 300}
     ]
 });
 game.render.animate();
 let resize = window.addEventListener("resize", () => {
-    console.log('resize');
+    // console.log('resize');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     game.setting.width = window.innerWidth;
@@ -509,13 +537,14 @@ let resize = window.addEventListener("resize", () => {
 // let start_button  = button.addEventListener("click", ()=>{
 //    game.render.animate();
 // });
-let pushDot = () => {
-    canvas.addEventListener('click', (e) => {
-        let x = e.offsetX;
-        let y = e.offsetY;
-    });
-};
-let log = console.log;
+let pushDot = canvas.addEventListener("mousedown", (e) => {
+    let x = e.offsetX;
+    let y = e.offsetY;
+    // e.
+    let point = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
+    log(e);
+    game.addPoint(point);
+});
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {
 //     var aX = event.accelerationIncludingGravity.x*10;
@@ -534,16 +563,6 @@ let log = console.log;
 //     // // document.querySelector("#block").style.transform="rotate("+aX+"deg)";
 //
 // }
-// let OM = class  {
-//     x:number;
-//     y:number;
-//     constructor(x,y){
-//         this.x = x ;
-//         this.y = y ;
-//     }
-//     foo () {
-//         log(this.x,this.y);
-//     };
 //# sourceMappingURL=index.js.map
 
 /***/ })
