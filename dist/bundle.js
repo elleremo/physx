@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-0782ce25e9b7396c";
+/******/ 	  var id = "webpack-livereload-plugin-script-a90d6b2b24977abb";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -166,19 +166,18 @@ let s = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"](4, 5);
 //     fixedPoints: Position;
 //     point: Position;
 // }
-class Game extends _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"] {
+class Game {
     constructor(setting) {
-        super();
         // this.set.ctx = setting.canvas.getContext("2d");
-        _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting = setting;
-        _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"].prototype.setting.Vpoints = [];
+        _Render__WEBPACK_IMPORTED_MODULE_1__["State"].setting = setting;
+        // State.prototype.buffer = [];
         this.render = new _Render__WEBPACK_IMPORTED_MODULE_1__["Render"]();
         this.structManager = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["StructManager"]();
-        console.log(this.render.setting);
+        // console.log(this.render.setting);
         // this.init();
     }
     addPoint(point) {
-        this.render.addOncePoint(point);
+        // this.render.addOncePoint(point);
     }
 }
 
@@ -190,94 +189,50 @@ class Game extends _Render__WEBPACK_IMPORTED_MODULE_1__["Setting"] {
 /*!**************************!*\
   !*** ./src/js/Render.js ***!
   \**************************/
-/*! exports provided: Setting, Render */
+/*! exports provided: State, Render */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Setting", function() { return Setting; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "State", function() { return State; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
-/* harmony import */ var _Vectrors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Vectrors */ "./src/js/Vectrors.js");
-﻿
-class Setting {
+﻿class State {
 }
-class Render extends Setting {
+class Render {
     constructor() {
-        super();
         this.points = [];
-        this.setting.ctx.shadowColor = 'rgba(65,152,211,0.65)';
-        this.setting.ctx.shadowBlur = 10;
-        // this.setting.ctx.scale( window.devicePixelRatio, window.devicePixelRatio);
-        this.add();
     }
     clear() {
-        this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
+        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
     }
-    addOncePoint(point) {
-        this.setting.Vpoints.push(point);
-    }
-    add() {
-        for (let p of this.setting.points) {
-            this.setting.Vpoints.push(new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Point"]({ x: p.x, y: p.y }, 5, p.type));
-        }
-        this.draw();
-    }
+    // // addOncePoint(point: Point){
+    // //     this.setting.Vpoints.push(point);
+    // // }
+    //
+    // add() {
+    //     for (let p of State.setting.points) {
+    //         State.structManager.buffer.push(new Point({x: p.x, y: p.y}, 5, p.type))
+    //     }
+    //
+    //      this.draw()
+    // }
     draw() {
-        this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
-        let lock = 200;
-        let power = 0.01;
-        let r = 0.02;
-        // for (let p1 of this.points) {
-        //     if(p1.type === 'static') continue;
-        //     for (let p2 of this.points) {
-        //
-        //         if (p1 !== p2) {
-        //                 let distance = Vector.pointDistance(p1, p2); // дистаниця
-        //                 let fVector = Vector.vectorAB(p1, p2).normalize(); // вектор силы
-        //                 let diff = distance - lock; // относительное растяжение стержня (+)
-        //                 //  let f =    ((power  * diff) + p1.vel.x*r + p1.acc.x;
-        //                 //  let fy =  (power * diff) + p1.vel.y*r + p1.acc.y;
-        //                 //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
-        //                 //  // let fy =       (power * diff) + (p1.acc.y*r) ;
-        //                 //  // let f = (100 )/;
-        //                 //  console.log ("distance: ",distance );
-        //                 //  // console.log ("fVector: ", fVector);
-        //                 //  // console.log ("diff: ", diff);
-        //                 //  // console.log ('res:  = ', (fVector.x * diff * power));
-        //                 //  // console.log ('accc:  = ', p1.acc.x);
-        //                 //
-        //                 //  p1.acc.x +=  ( fVector.x * f ) ;
-        //                 //  p1.acc.y += (fVector.y * fy) ;
-        //
-        //
-        //
-        //
-        //             let plus = (diff/(80));
-        //             p1.x += (plus*fVector.x );
-        //             p1.y += (plus*fVector.y );
-        //             // p2.x -= (plus*fVector.x );
-        //             //     p2.y -= (plus*fVector.y );
-        //
-        //
-        //         }
-        //     }
-        // }
-        for (let p1 of this.setting.Vpoints) {
-            p1.move();
-            p1.update();
-            p1.draw();
-        }
-        for (let p1 of this.setting.Vpoints) {
-            for (let p2 of this.setting.Vpoints) {
-                if (p1 !== p2) {
-                    this.setting.ctx.beginPath();
-                    this.setting.ctx.moveTo(p1.x, p1.y);
-                    this.setting.ctx.lineTo(p2.x, p2.y);
-                    this.setting.ctx.strokeStyle = 'rgba(81,184,255,0.76)';
-                    this.setting.ctx.lineWidth = 1.5;
-                    this.setting.ctx.stroke();
-                }
-            }
+        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
+        if (State.structManager.buffer == false)
+            return;
+        for (let struct of State.structManager.buffer) {
+            State.structManager.buffer.forEach((struct) => {
+                struct.edges.forEach((edge) => {
+                    edge.draw();
+                    edge.firstNode.draw();
+                    edge.lastNode.draw();
+                });
+            });
+            // p1.move();
+            //
+            // p1.update();
+            //
+            // p1.draw();
         }
     }
     stopAnimate() {
@@ -322,21 +277,19 @@ class Render extends Setting {
 /*!****************************!*\
   !*** ./src/js/Vectrors.js ***!
   \****************************/
-/*! exports provided: Vector, StructManager, Struct, Edge, Point */
+/*! exports provided: Vector, Struct, Edge, Point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return Vector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StructManager", function() { return StructManager; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Struct", function() { return Struct; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return Edge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Point", function() { return Point; });
 /* harmony import */ var _Render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Render */ "./src/js/Render.js");
 ﻿
-class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
+class Vector {
     constructor(x, y) {
-        super();
         this.x = x || 0;
         this.y = y || 0;
     }
@@ -356,9 +309,11 @@ class Vector extends _Render__WEBPACK_IMPORTED_MODULE_0__["Setting"] {
 }
 class StructManager {
 }
+StructManager.structs = [];
+StructManager.buffer = [];
 class Struct {
     constructor(type) {
-        this.type = 'web' || false;
+        this.type = 'web' || false || false;
         this.type = type;
         return this;
     }
@@ -371,6 +326,14 @@ class Edge {
         this.firstNode = first;
         this.lastNode = last;
         this.baseLength = Vector.distanceAB(first, last);
+    }
+    draw() {
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.beginPath();
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.moveTo(this.firstNode.x, this.firstNode.y);
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.lineTo(this.lastNode.x, this.lastNode.y);
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.strokeStyle = 'rgba(81,184,255,0.76)';
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.lineWidth = 1.5;
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.stroke();
     }
 }
 class Point extends Vector {
@@ -387,7 +350,7 @@ class Point extends Vector {
         this.type = type;
         this.oldx = this.x;
         this.oldy = this.y;
-        // this.draw();
+        this.draw();
         // this.vel.x = Math.random()*2 ;
         // this.vel.y = Math.random()*2 ;
     }
@@ -421,47 +384,35 @@ class Point extends Vector {
         //     this.oldx = tempx ;
         //     this.oldy = tempy;
         // };
-        if (this.y > this.setting.height - this.size) {
-            // let n = this.y;
-            // let o = this.oldy;
-            // this.oldy = this.y + (n-o) ;
-            this.y = this.setting.height - this.size;
+        // this.vel.y += this.acc.y + this.grav;
+        // this.vel.x += this.acc.x ;
+        let x = this.x;
+        let y = this.y;
+        this.x += this.x - this.oldx + this.acc.x ** 2;
+        this.y += this.y - this.oldy + this.acc.y ** 2 + this.grav ** 2;
+        this.oldx = x;
+        this.oldy = y;
+        if (this.y >= _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.height - this.size) {
+            let n = this.y;
+            let o = this.oldy;
+            this.y = _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.height - this.size;
+            this.oldy = this.y + (n - o);
             // this.oldx = this.x - (this.x-this.oldx)*0.1;
-            this.vel.y = -this.vel.y;
+            // this.vel.y = -this.vel.y;
         }
-        this.vel.y += this.acc.y + this.grav;
-        this.vel.x += this.acc.x;
-        this.x += this.vel.x;
-        this.y += this.vel.y;
-        console.log(this.vel.y);
-        // this.oldx = this.x ;
-        // this.oldy = this.y;
     }
     update() {
         let lock = 100;
-        for (let p2 of this.setting.Vpoints) {
+        for (let p2 of _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {
                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
                 let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
                 let V1V2Length = V1V2.length; // дистаниця
-                let diff = (V1V2Length - lock) / 20; // разница в длине
-                //  let f =    ((power  * diff) + p1.vel.x*r + p1.acc.x;
-                //  let fy =  (power * diff) + p1.vel.y*r + p1.acc.y;
-                //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
-                //  // let fy =       (power * diff) + (p1.acc.y*r) ;
-                //  // let f = (100 )/;
-                //  console.log ("distance: ",distance );
-                //  // console.log ("fVector: ", fVector);
-                //  // console.log ("diff: ", diff);
-                //  // console.log ('res:  = ', (fVector.x * diff * power));
-                //  // console.log ('accc:  = ', p1.acc.x);
-                //
-                //  p1.acc.x +=  ( fVector.x * f ) ;
-                //  p1.acc.y += (fVector.y * fy) ;
+                let diff = (V1V2Length - lock) / 20;
                 if (this.type !== 'static') {
-                    this.vel.x += V1V2_Normalize.x * diff;
-                    this.vel.y += V1V2_Normalize.y * diff;
+                    this.x += V1V2_Normalize.x * diff;
+                    this.y += V1V2_Normalize.y * diff;
                 }
                 if (p2.type !== 'static') {
                     p2.x -= V1V2_Normalize.x * diff;
@@ -476,10 +427,10 @@ class Point extends Vector {
         }
     }
     draw() {
-        this.setting.ctx.beginPath();
-        this.setting.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
-        this.setting.ctx.fillStyle = '#eee';
-        this.setting.ctx.fill();
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.beginPath();
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.fillStyle = '#eee';
+        _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.fill();
         // this.setting.ctx.lineWidth = -.0;
         // this.setting.ctx.strokeStyle = '#000000';
         // this.setting.ctx.stroke();
@@ -500,50 +451,65 @@ class Point extends Vector {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Game__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Game */ "./src/js/Game.js");
 /* harmony import */ var _Vectrors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Vectrors */ "./src/js/Vectrors.js");
+/* harmony import */ var _Render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Render */ "./src/js/Render.js");
 ﻿
+
 
 let log = console.log;
 let dpr = window.devicePixelRatio;
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
 let button = document.getElementById('button');
-canvas.width = document.body.clientWidth;
-canvas.height = document.body.clientHeight;
+canvas.width = 500;
+canvas.height = 500;
+log(canvas.width);
 const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     canvas: canvas,
     ctx: ctx,
-    width: canvas.width,
-    height: canvas.height,
+    width: 500,
+    height: 500,
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
-    // { x: 400, y: 50}
-    // //
-    // // { x: 250, y: 200 },
-    //
-    //
-    // { x: 300,  y: 300}
+        { x: 100, y: 50 },
+        { x: 250, y: 200 },
+        { x: 400, y: 350 }
     ]
 });
 game.render.animate();
+let KeyMap = window.addEventListener("keyup", (e) => {
+    switch (e.code) {
+        case "Space":
+            game.render.animate();
+            break;
+    }
+});
 let resize = window.addEventListener("resize", () => {
-    // console.log('resize');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    game.setting.width = window.innerWidth;
-    game.setting.height = window.innerHeight;
+    console.log('resize');
+    // canvas.width = window.innerWidth;  // УДОЛИ!
+    // canvas.height = window.innerHeight;
+    _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.width = window.innerWidth;
+    _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.height = window.innerHeight;
+    log('width:' + window.innerWidth, 'height: ' + window.innerHeight);
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 // let start_button  = button.addEventListener("click", ()=>{
 //    game.render.animate();
 // });
-let pushDot = canvas.addEventListener("mousedown", (e) => {
+let pushDot = canvas.addEventListener("click", (e) => {
     let x = e.offsetX;
     let y = e.offsetY;
-    // e.
-    let point = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
-    log(e);
-    game.addPoint(point);
+    _Vectrors__WEBPACK_IMPORTED_MODULE_1__["StructManager"];
+    let point1 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
+    let point2 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
+    let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"](point1, point2);
+    canvas.addEventListener('mousemove', (e) => {
+        point2.x = e.layerX;
+        point2.y = e.layerY;
+        edge.draw();
+    });
+    // let edge = new Edge(point, point);
+    // game.addPoint(point);
 });
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {

@@ -1,5 +1,5 @@
 ﻿import { Vector, StructManager } from "./Vectrors";
-import { Setting, Render } from "./Render";
+import { State, Render } from "./Render";
 let s = new Vector(4, 5);
 //
 // class DyPoint extends Point {
@@ -55,19 +55,18 @@ let s = new Vector(4, 5);
 //     fixedPoints: Position;
 //     point: Position;
 // }
-class Game extends Setting {
+class Game {
     constructor(setting) {
-        super();
         // this.set.ctx = setting.canvas.getContext("2d");
-        Setting.prototype.setting = setting;
-        Setting.prototype.setting.Vpoints = [];
+        State.setting = setting;
+        // State.prototype.buffer = [];
         this.render = new Render();
         this.structManager = new StructManager();
-        console.log(this.render.setting);
+        // console.log(this.render.setting);
         // this.init();
     }
     addPoint(point) {
-        this.render.addOncePoint(point);
+        // this.render.addOncePoint(point);
     }
 }
 export { Game };

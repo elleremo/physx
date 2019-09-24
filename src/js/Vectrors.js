@@ -1,7 +1,6 @@
-﻿import { Setting } from "./Render";
-export class Vector extends Setting {
+﻿import { State } from "./Render";
+export class Vector {
     constructor(x, y) {
-        super();
         this.x = x || 0;
         this.y = y || 0;
     }
@@ -19,11 +18,13 @@ export class Vector extends Setting {
         return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
     }
 }
-export class StructManager {
+class StructManager {
 }
+StructManager.structs = [];
+StructManager.buffer = [];
 export class Struct {
     constructor(type) {
-        this.type = 'web' || 'line';
+        this.type = 'web' || 'line' || 'static';
         this.type = type;
         return this;
     }
@@ -36,6 +37,14 @@ export class Edge {
         this.firstNode = first;
         this.lastNode = last;
         this.baseLength = Vector.distanceAB(first, last);
+    }
+    draw() {
+        State.setting.ctx.beginPath();
+        State.setting.ctx.moveTo(this.firstNode.x, this.firstNode.y);
+        State.setting.ctx.lineTo(this.lastNode.x, this.lastNode.y);
+        State.setting.ctx.strokeStyle = 'rgba(81,184,255,0.76)';
+        State.setting.ctx.lineWidth = 1.5;
+        State.setting.ctx.stroke();
     }
 }
 export class Point extends Vector {
@@ -52,7 +61,7 @@ export class Point extends Vector {
         this.type = type;
         this.oldx = this.x;
         this.oldy = this.y;
-        // this.draw();
+        this.draw();
         // this.vel.x = Math.random()*2 ;
         // this.vel.y = Math.random()*2 ;
     }
@@ -86,47 +95,35 @@ export class Point extends Vector {
         //     this.oldx = tempx ;
         //     this.oldy = tempy;
         // };
-        if (this.y > this.setting.height - this.size) {
-            // let n = this.y;
-            // let o = this.oldy;
-            // this.oldy = this.y + (n-o) ;
-            this.y = this.setting.height - this.size;
+        // this.vel.y += this.acc.y + this.grav;
+        // this.vel.x += this.acc.x ;
+        let x = this.x;
+        let y = this.y;
+        this.x += this.x - this.oldx + this.acc.x ** 2;
+        this.y += this.y - this.oldy + this.acc.y ** 2 + this.grav ** 2;
+        this.oldx = x;
+        this.oldy = y;
+        if (this.y >= State.setting.height - this.size) {
+            let n = this.y;
+            let o = this.oldy;
+            this.y = State.setting.height - this.size;
+            this.oldy = this.y + (n - o);
             // this.oldx = this.x - (this.x-this.oldx)*0.1;
-            this.vel.y = -this.vel.y;
+            // this.vel.y = -this.vel.y;
         }
-        this.vel.y += this.acc.y + this.grav;
-        this.vel.x += this.acc.x;
-        this.x += this.vel.x;
-        this.y += this.vel.y;
-        console.log(this.vel.y);
-        // this.oldx = this.x ;
-        // this.oldy = this.y;
     }
     update() {
         let lock = 100;
-        for (let p2 of this.setting.Vpoints) {
+        for (let p2 of State.setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {
                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
                 let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
                 let V1V2Length = V1V2.length; // дистаниця
-                let diff = (V1V2Length - lock) / 20; // разница в длине
-                //  let f =    ((power  * diff) + p1.vel.x*r + p1.acc.x;
-                //  let fy =  (power * diff) + p1.vel.y*r + p1.acc.y;
-                //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
-                //  // let fy =       (power * diff) + (p1.acc.y*r) ;
-                //  // let f = (100 )/;
-                //  console.log ("distance: ",distance );
-                //  // console.log ("fVector: ", fVector);
-                //  // console.log ("diff: ", diff);
-                //  // console.log ('res:  = ', (fVector.x * diff * power));
-                //  // console.log ('accc:  = ', p1.acc.x);
-                //
-                //  p1.acc.x +=  ( fVector.x * f ) ;
-                //  p1.acc.y += (fVector.y * fy) ;
+                let diff = (V1V2Length - lock) / 20;
                 if (this.type !== 'static') {
-                    this.vel.x += V1V2_Normalize.x * diff;
-                    this.vel.y += V1V2_Normalize.y * diff;
+                    this.x += V1V2_Normalize.x * diff;
+                    this.y += V1V2_Normalize.y * diff;
                 }
                 if (p2.type !== 'static') {
                     p2.x -= V1V2_Normalize.x * diff;
@@ -141,10 +138,10 @@ export class Point extends Vector {
         }
     }
     draw() {
-        this.setting.ctx.beginPath();
-        this.setting.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
-        this.setting.ctx.fillStyle = '#eee';
-        this.setting.ctx.fill();
+        State.setting.ctx.beginPath();
+        State.setting.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
+        State.setting.ctx.fillStyle = '#eee';
+        State.setting.ctx.fill();
         // this.setting.ctx.lineWidth = -.0;
         // this.setting.ctx.strokeStyle = '#000000';
         // this.setting.ctx.stroke();

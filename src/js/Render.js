@@ -1,83 +1,40 @@
-﻿import { Point } from "./Vectrors";
-export class Setting {
+﻿export class State {
 }
-export class Render extends Setting {
+export class Render {
     constructor() {
-        super();
         this.points = [];
-        this.setting.ctx.shadowColor = 'rgba(65,152,211,0.65)';
-        this.setting.ctx.shadowBlur = 10;
-        // this.setting.ctx.scale( window.devicePixelRatio, window.devicePixelRatio);
-        this.add();
     }
     clear() {
-        this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
+        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
     }
-    addOncePoint(point) {
-        this.setting.Vpoints.push(point);
-    }
-    add() {
-        for (let p of this.setting.points) {
-            this.setting.Vpoints.push(new Point({ x: p.x, y: p.y }, 5, p.type));
-        }
-        this.draw();
-    }
+    // // addOncePoint(point: Point){
+    // //     this.setting.Vpoints.push(point);
+    // // }
+    //
+    // add() {
+    //     for (let p of State.setting.points) {
+    //         State.structManager.buffer.push(new Point({x: p.x, y: p.y}, 5, p.type))
+    //     }
+    //
+    //      this.draw()
+    // }
     draw() {
-        this.setting.ctx.clearRect(0, 0, this.setting.width, this.setting.height);
-        let lock = 200;
-        let power = 0.01;
-        let r = 0.02;
-        // for (let p1 of this.points) {
-        //     if(p1.type === 'static') continue;
-        //     for (let p2 of this.points) {
-        //
-        //         if (p1 !== p2) {
-        //                 let distance = Vector.pointDistance(p1, p2); // дистаниця
-        //                 let fVector = Vector.vectorAB(p1, p2).normalize(); // вектор силы
-        //                 let diff = distance - lock; // относительное растяжение стержня (+)
-        //                 //  let f =    ((power  * diff) + p1.vel.x*r + p1.acc.x;
-        //                 //  let fy =  (power * diff) + p1.vel.y*r + p1.acc.y;
-        //                 //  // let fy =  (power * diff) + (p1.vel.y*r) + (p1.acc.y*0.000000001 );
-        //                 //  // let fy =       (power * diff) + (p1.acc.y*r) ;
-        //                 //  // let f = (100 )/;
-        //                 //  console.log ("distance: ",distance );
-        //                 //  // console.log ("fVector: ", fVector);
-        //                 //  // console.log ("diff: ", diff);
-        //                 //  // console.log ('res:  = ', (fVector.x * diff * power));
-        //                 //  // console.log ('accc:  = ', p1.acc.x);
-        //                 //
-        //                 //  p1.acc.x +=  ( fVector.x * f ) ;
-        //                 //  p1.acc.y += (fVector.y * fy) ;
-        //
-        //
-        //
-        //
-        //             let plus = (diff/(80));
-        //             p1.x += (plus*fVector.x );
-        //             p1.y += (plus*fVector.y );
-        //             // p2.x -= (plus*fVector.x );
-        //             //     p2.y -= (plus*fVector.y );
-        //
-        //
-        //         }
-        //     }
-        // }
-        for (let p1 of this.setting.Vpoints) {
-            p1.move();
-            p1.update();
-            p1.draw();
-        }
-        for (let p1 of this.setting.Vpoints) {
-            for (let p2 of this.setting.Vpoints) {
-                if (p1 !== p2) {
-                    this.setting.ctx.beginPath();
-                    this.setting.ctx.moveTo(p1.x, p1.y);
-                    this.setting.ctx.lineTo(p2.x, p2.y);
-                    this.setting.ctx.strokeStyle = 'rgba(81,184,255,0.76)';
-                    this.setting.ctx.lineWidth = 1.5;
-                    this.setting.ctx.stroke();
-                }
-            }
+        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
+        if (State.structManager.buffer == false)
+            return;
+        for (let struct of State.structManager.buffer) {
+            State.structManager.buffer.forEach((struct) => {
+                struct.edges.forEach((edge) => {
+                    edge.draw();
+                    edge.firstNode.draw();
+                    edge.lastNode.draw();
+                });
+            });
+            // p1.move();
+            //
+            // p1.update();
+            //
+            // p1.draw();
         }
     }
     stopAnimate() {

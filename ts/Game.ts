@@ -1,5 +1,5 @@
 import {Vector, Point, Struct, Edge, StructManager} from "./Vectrors"
-import {Setting, TSetting, ISetting,  Render} from "./Render";
+import {State, ISetting,  Render} from "./Render";
 
 let s = new Vector(4, 5);
 
@@ -59,27 +59,27 @@ let s = new Vector(4, 5);
 // }
 
 
-class Game extends Setting{
+class Game {
 
     set;
     render: Render;
     structManager: StructManager;
 
-    constructor(setting:{}) {
+    constructor(setting:ISetting) {
 
-        super();
+
         // this.set.ctx = setting.canvas.getContext("2d");
-        Setting.prototype.setting = setting;
-        Setting.prototype.setting.Vpoints = [];
+        State.setting = setting;
+        // State.prototype.buffer = [];
         this.render = new Render();
         this.structManager = new StructManager();
-        console.log(this.render.setting);
+        // console.log(this.render.setting);
 
         // this.init();
     }
 
     addPoint(point: Point){
-        this.render.addOncePoint(point);
+        // this.render.addOncePoint(point);
     }
 
     // init() {
