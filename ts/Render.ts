@@ -1,4 +1,4 @@
-import {Vector,StructManager, Struct, Edge, Point} from "./Vectrors";
+import {Vector, StructManager, Struct, Edge, Point} from "./Vectrors";
 
 export interface ISetting  {
     canvas: HTMLCanvasElement;
@@ -46,7 +46,7 @@ export class Render {
 
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
 
-        if (State.structManager.buffer == false) return;
+        if (State.structManager.buffer.length == 0) return;
 
         for (let struct of State.structManager.buffer) {
 

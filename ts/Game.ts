@@ -72,7 +72,7 @@ class Game {
         State.setting = setting;
         // State.prototype.buffer = [];
         this.render = new Render();
-        this.structManager = new StructManager();
+        State.structManager = new StructManager();
         // console.log(this.render.setting);
 
         // this.init();

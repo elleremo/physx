@@ -33,16 +33,16 @@ export class Vector {
 
 
 
-class StructManager {
-    public static structs: Struct[] = [];
-    public static buffer: Struct[] =[];
+export class StructManager {
+    public   structs: Struct[] = [];
+    public   buffer: Struct[] =[];
 
 }
 
 export class Struct {
     edges: Edge[];
     type: string = 'web' || 'line' || 'static';
-x;
+
     constructor(type: string) {
         this.type = type;
         return this;
@@ -163,7 +163,7 @@ export class Point extends Vector {
     update() {
 
         let lock = 100;
-        for (let p2 of State.setting.Vpoints) {
+       /* for (let p2 of State.setting.Vpoints) {
             // if(p2.type === 'static') continue;
             if (this !== p2) {
                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
@@ -191,7 +191,7 @@ export class Point extends Vector {
 
             }
 
-        }
+        }*/
     }
 
     draw() {

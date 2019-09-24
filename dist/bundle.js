@@ -172,7 +172,7 @@ class Game {
         _Render__WEBPACK_IMPORTED_MODULE_1__["State"].setting = setting;
         // State.prototype.buffer = [];
         this.render = new _Render__WEBPACK_IMPORTED_MODULE_1__["Render"]();
-        this.structManager = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["StructManager"]();
+        _Render__WEBPACK_IMPORTED_MODULE_1__["State"].structManager = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["StructManager"]();
         // console.log(this.render.setting);
         // this.init();
     }
@@ -218,7 +218,7 @@ class Render {
     // }
     draw() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
-        if (State.structManager.buffer == false)
+        if (State.structManager.buffer.length == 0)
             return;
         for (let struct of State.structManager.buffer) {
             State.structManager.buffer.forEach((struct) => {
@@ -277,12 +277,13 @@ class Render {
 /*!****************************!*\
   !*** ./src/js/Vectrors.js ***!
   \****************************/
-/*! exports provided: Vector, Struct, Edge, Point */
+/*! exports provided: Vector, StructManager, Struct, Edge, Point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return Vector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StructManager", function() { return StructManager; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Struct", function() { return Struct; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return Edge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Point", function() { return Point; });
@@ -308,9 +309,11 @@ class Vector {
     }
 }
 class StructManager {
+    constructor() {
+        this.structs = [];
+        this.buffer = [];
+    }
 }
-StructManager.structs = [];
-StructManager.buffer = [];
 class Struct {
     constructor(type) {
         this.type = 'web' || false || false;
@@ -403,28 +406,35 @@ class Point extends Vector {
     }
     update() {
         let lock = 100;
-        for (let p2 of _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.Vpoints) {
-            // if(p2.type === 'static') continue;
-            if (this !== p2) {
-                let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
-                let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
-                let V1V2Length = V1V2.length; // дистаниця
-                let diff = (V1V2Length - lock) / 20;
-                if (this.type !== 'static') {
-                    this.x += V1V2_Normalize.x * diff;
-                    this.y += V1V2_Normalize.y * diff;
-                }
-                if (p2.type !== 'static') {
-                    p2.x -= V1V2_Normalize.x * diff;
-                    p2.y -= V1V2_Normalize.y * diff;
-                }
-                // let plus = (diff / (80));
-                // p1.x += (plus * fVector.x);
-                // p1.y += (plus * fVector.y);
-                // // p2.x -= (plus*fVector.x );
-                // //     p2.y -= (plus*fVector.y );
-            }
-        }
+        /* for (let p2 of State.setting.Vpoints) {
+             // if(p2.type === 'static') continue;
+             if (this !== p2) {
+                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
+                 let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
+                 let V1V2Length = V1V2.length; // дистаниця
+                 let diff = (V1V2Length - lock) / 20;
+ 
+                 if (this.type !== 'static') {
+                     this.x += V1V2_Normalize.x * diff;
+                     this.y += V1V2_Normalize.y * diff;
+ 
+                 }
+                 if (p2.type !== 'static') {
+                     p2.x -= V1V2_Normalize.x * diff;
+                     p2.y -= V1V2_Normalize.y * diff;
+                 }
+ 
+ 
+                 // let plus = (diff / (80));
+                 // p1.x += (plus * fVector.x);
+                 // p1.y += (plus * fVector.y);
+                 // // p2.x -= (plus*fVector.x );
+                 // //     p2.y -= (plus*fVector.y );
+ 
+ 
+             }
+ 
+         }*/
     }
     draw() {
         _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.beginPath();

@@ -20,7 +20,7 @@ export class Render {
     // }
     draw() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
-        if (State.structManager.buffer == false)
+        if (State.structManager.buffer.length == 0)
             return;
         for (let struct of State.structManager.buffer) {
             State.structManager.buffer.forEach((struct) => {
