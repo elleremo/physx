@@ -1,5 +1,5 @@
 import {Game} from "./Game";
-import {Edge, Point, StructManager} from "./Vectrors";
+import {Edge, Point, Struct, StructManager} from "./Vectrors";
 import {State} from "./Render";
 
 let log = console.log;
@@ -7,12 +7,12 @@ let log = console.log;
 let dpr = window.devicePixelRatio;
 
 
-let canvas : HTMLCanvasElement = window.document.querySelector('canvas');
+let canvas: HTMLCanvasElement = window.document.querySelector('canvas');
 let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-let  button = document.getElementById('button')
+let button = document.getElementById('button')
 
-canvas.width= 500;
-canvas.height= 500;
+canvas.width = 500;
+canvas.height = 500;
 
 log(canvas.width);
 
@@ -24,27 +24,29 @@ const game = new Game({
     // fixedPoints  : { x:width, y:0 },
     // fixedPoints  : { x:width, y:20 },
     points: [
-        { x: 100, y: 50},
+        {x: 100, y: 50},
 
-        { x: 250, y: 200 },
+        {x: 250, y: 200},
 
-        { x: 400,  y: 350}
+        {x: 400, y: 350}
     ]
 });
 
 game.render.animate();
 
 
-let KeyMap = window.addEventListener("keyup", (e)=>{
+let KeyMap = window.addEventListener("keyup", (e) => {
 
     switch (e.code) {
         case "Space":
             game.render.animate();
             break;
+        case "KeyL":break;
+
     }
 
 });
-let resize  = window.addEventListener("resize", ()=>{
+let resize = window.addEventListener("resize", () => {
 
 
     console.log('resize');
@@ -53,41 +55,59 @@ let resize  = window.addEventListener("resize", ()=>{
     State.setting.width = window.innerWidth;
     State.setting.height = window.innerHeight;
 
-    log('width:'+ window.innerWidth, 'height: ' + window.innerHeight)
+    log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
 
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 // let start_button  = button.addEventListener("click", ()=>{
 //    game.render.animate();
 // });
+let o = {
+    clickCount: 0,
+    secondClick: {},
+    click:function(){
+        canvas.addEventListener("click",(e)=>{
+            this.clickCount++;
+            this.pushDot(e);
+        });
+    },
+    pushDot: function (e) {
 
-let pushDot =  canvas.addEventListener( "click", (e:MouseEvent) =>{
-    let x = e.offsetX;
-    let y = e.offsetY;
+        log(this.clickCount);
+        let x = e.offsetX;
+        let y = e.offsetY;
 
-    StructManager
+        if (this.clickCount % 2 != 0){ // если нечетное (1 3 5)
+            let edge = new Edge();
 
-    let point1 = new Point( {x, y},5);
-    let point2 = new Point( {x, y},5);
-    let edge = new Edge(point1, point2);
-    canvas.addEventListener('mousemove', (e: MouseEvent) => {
-        point2.x = e.layerX;
-        point2.y = e.layerY;
-        edge.draw();
+        }
 
-    });
+        // State.structManager.buffer.push(new Struct('web'));
+
+        let point1 = new Point({x, y}, 5);
+        let point2 = new Point({x, y}, 5);
+        let edge = new Edge();
+        let struct = new Struct('web').add(edge);
+        State.structManager.buffer.push(struct);
+
+        canvas.addEventListener('mousemove', (e: MouseEvent) => {
+            point2.x = e.offsetX;
+            point2.y = e.offsetY;
+
+        } );
+
+        // log(pushDot);
+        // let edge = new Edge(point, point);
+        // game.addPoint(point);
+
+    }
 
 
-    // let edge = new Edge(point, point);
-    // game.addPoint(point);
-
-});
-
-
-
-
-
-
+    //     canvas.addEventListener("click", (e: MouseEvent) => {
+    //
+    // }
+};
+o.click();
 
 
 // let s = new DeviceAcceleration();

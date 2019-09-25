@@ -40,7 +40,7 @@ export class StructManager {
 }
 
 export class Struct {
-    edges: Edge[];
+    edges: Edge[] = [];
     type: string = 'web' || 'line' || 'static';
 
     constructor(type: string) {
@@ -50,7 +50,9 @@ export class Struct {
     }
 
     add(edge: Edge) {
-        this.edges.push(edge)
+        this.edges.push(edge);
+        return this;
+
     }
 }
 
@@ -59,11 +61,11 @@ export class Edge {
     lastNode: Point;
     baseLength: number;
 
-    constructor(first: Point, last: Point) {
-
-        this.firstNode = first;
-        this.lastNode = last;
-        this.baseLength = Vector.distanceAB(first, last);
+    constructor( ) {
+        //
+        // this.firstNode = first;
+        // this.lastNode = last;
+        // this.baseLength = Vector.distanceAB(first, last);
     }
 
     draw():void{

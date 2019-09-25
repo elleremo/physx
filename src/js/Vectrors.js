@@ -26,19 +26,22 @@ export class StructManager {
 }
 export class Struct {
     constructor(type) {
+        this.edges = [];
         this.type = 'web' || 'line' || 'static';
         this.type = type;
         return this;
     }
     add(edge) {
         this.edges.push(edge);
+        return this;
     }
 }
 export class Edge {
-    constructor(first, last) {
-        this.firstNode = first;
-        this.lastNode = last;
-        this.baseLength = Vector.distanceAB(first, last);
+    constructor() {
+        //
+        // this.firstNode = first;
+        // this.lastNode = last;
+        // this.baseLength = Vector.distanceAB(first, last);
     }
     draw() {
         State.setting.ctx.beginPath();

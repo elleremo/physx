@@ -10,7 +10,7 @@ export interface ISetting  {
 }
 
 export class State{
-    static structManager: StructManager;
+    static structManager: StructManager ;
     static setting: ISetting;
 }
 
@@ -46,15 +46,15 @@ export class Render {
 
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
 
-        if (State.structManager.buffer.length == 0) return;
+        // if (State.structManager.buffer.length == 0) return;
 
         for (let struct of State.structManager.buffer) {
 
             State.structManager.buffer.forEach((struct:Struct)=>{
                 struct.edges.forEach((edge:Edge)=>{
-                    edge.draw();
                     edge.firstNode.draw();
                     edge.lastNode.draw();
+                    edge.draw();
                 })
             })
 

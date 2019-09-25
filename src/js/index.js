@@ -1,5 +1,5 @@
 ﻿import { Game } from "./Game";
-import { Edge, Point, StructManager } from "./Vectrors";
+import { Edge, Point, Struct } from "./Vectrors";
 import { State } from "./Render";
 let log = console.log;
 let dpr = window.devicePixelRatio;
@@ -28,6 +28,7 @@ let KeyMap = window.addEventListener("keyup", (e) => {
         case "Space":
             game.render.animate();
             break;
+        case "KeyL": break;
     }
 });
 let resize = window.addEventListener("resize", () => {
@@ -42,21 +43,41 @@ let resize = window.addEventListener("resize", () => {
 // let start_button  = button.addEventListener("click", ()=>{
 //    game.render.animate();
 // });
-let pushDot = canvas.addEventListener("click", (e) => {
-    let x = e.offsetX;
-    let y = e.offsetY;
-    StructManager;
-    let point1 = new Point({ x, y }, 5);
-    let point2 = new Point({ x, y }, 5);
-    let edge = new Edge(point1, point2);
-    canvas.addEventListener('mousemove', (e) => {
-        point2.x = e.layerX;
-        point2.y = e.layerY;
-        edge.draw();
-    });
-    // let edge = new Edge(point, point);
-    // game.addPoint(point);
-});
+let o = {
+    clickCount: 0,
+    secondClick: {},
+    click: function () {
+        canvas.addEventListener("click", (e) => {
+            this.clickCount++;
+            this.pushDot(e);
+        });
+    },
+    pushDot: function (e) {
+        log(this.clickCount);
+        let x = e.offsetX;
+        let y = e.offsetY;
+        if (this.clickCount % 2 != 0) { // если нечетное (1 3 5)
+            let edge = new Edge();
+        }
+        // State.structManager.buffer.push(new Struct('web'));
+        let point1 = new Point({ x, y }, 5);
+        let point2 = new Point({ x, y }, 5);
+        let edge = new Edge();
+        let struct = new Struct('web').add(edge);
+        State.structManager.buffer.push(struct);
+        canvas.addEventListener('mousemove', (e) => {
+            point2.x = e.offsetX;
+            point2.y = e.offsetY;
+        });
+        // log(pushDot);
+        // let edge = new Edge(point, point);
+        // game.addPoint(point);
+    }
+    //     canvas.addEventListener("click", (e: MouseEvent) => {
+    //
+    // }
+};
+o.click();
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {
 //     var aX = event.accelerationIncludingGravity.x*10;

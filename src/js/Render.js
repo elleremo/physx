@@ -20,14 +20,13 @@ export class Render {
     // }
     draw() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
-        if (State.structManager.buffer.length == 0)
-            return;
+        // if (State.structManager.buffer.length == 0) return;
         for (let struct of State.structManager.buffer) {
             State.structManager.buffer.forEach((struct) => {
                 struct.edges.forEach((edge) => {
-                    edge.draw();
                     edge.firstNode.draw();
                     edge.lastNode.draw();
+                    edge.draw();
                 });
             });
             // p1.move();
