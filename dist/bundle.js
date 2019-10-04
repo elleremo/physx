@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-46b0773acfb89678";
+/******/ 	  var id = "webpack-livereload-plugin-script-6621f384e1916065";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -492,7 +492,8 @@ game.render.animate();
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            game.render.animate();
+            // game.render.animate();
+            log('space');
             break;
         case "KeyL": break;
     }
@@ -503,7 +504,7 @@ let resize = window.addEventListener("resize", () => {
     // canvas.height = window.innerHeight;
     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.width = window.innerWidth;
     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.height = window.innerHeight;
-    log('width:' + window.innerWidth, 'height: ' + window.innerHeight);
+    // log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 // let start_button  = button.addEventListener("click", ()=>{

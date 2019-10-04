@@ -39,13 +39,13 @@ let KeyMap = window.addEventListener("keyup", (e) => {
 
     switch (e.code) {
         case "Space":
-            game.render.animate();
+            // game.render.animate();
+            log('space')
             break;
         case "KeyL":break;
-
     }
-
 });
+
 let resize = window.addEventListener("resize", () => {
 
 
@@ -55,7 +55,7 @@ let resize = window.addEventListener("resize", () => {
     State.setting.width = window.innerWidth;
     State.setting.height = window.innerHeight;
 
-    log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
+    // log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
 
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
@@ -71,6 +71,7 @@ let o = {
             this.pushDot(e);
         });
     },
+
     pushDot: function (e) {
 
         log(this.clickCount);
@@ -79,7 +80,6 @@ let o = {
 
         if (this.clickCount % 2 != 0){ // если нечетное (1 3 5)
             let edge = new Edge();
-
         }
 
         // State.structManager.buffer.push(new Struct('web'));

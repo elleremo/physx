@@ -74,11 +74,11 @@ export class Render {
 
     stopAnimate(){
         cancelAnimationFrame(this.RID);
-
     }
-    animate() {
-        this.draw();
 
+    animate() {
+
+        this.draw();
         this.RID = requestAnimationFrame(() => this.animate());
 
         // setTimeout(()=>this.animate(), 100)

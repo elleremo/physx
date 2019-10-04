@@ -26,7 +26,8 @@ game.render.animate();
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            game.render.animate();
+            // game.render.animate();
+            log('space');
             break;
         case "KeyL": break;
     }
@@ -37,7 +38,7 @@ let resize = window.addEventListener("resize", () => {
     // canvas.height = window.innerHeight;
     State.setting.width = window.innerWidth;
     State.setting.height = window.innerHeight;
-    log('width:' + window.innerWidth, 'height: ' + window.innerHeight);
+    // log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
     // game.setting.ctx.scale( 1/window.devicePixelRatio, 1/window.devicePixelRatio);
 });
 // let start_button  = button.addEventListener("click", ()=>{
