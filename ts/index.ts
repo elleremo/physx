@@ -42,7 +42,8 @@ let KeyMap = window.addEventListener("keyup", (e) => {
             // game.render.animate();
             log('space')
             break;
-        case "KeyL":break;
+        case "KeyL":
+            break;
     }
 });
 
@@ -64,37 +65,72 @@ let resize = window.addEventListener("resize", () => {
 // });
 let o = {
     clickCount: 0,
-    secondClick: {},
-    click:function(){
-        canvas.addEventListener("click",(e)=>{
-            this.clickCount++;
+    struct: undefined,
+    lastPoint: undefined,
+
+    init() {
+        this.struct = new Struct('web');
+        State.structManager.buffer.push(this.struct);
+        o.click();
+    },
+
+    click: function () {
+        canvas.addEventListener("click", (e) => {
+
             this.pushDot(e);
+            this.clickCount++;
+
         });
     },
 
+    // closure: function(p1){
+    //
+    //     let p2 = p1;
+    //
+    //     return function (p2) {
+    //         return p2 + p1;
+    //     }
+    // },
+
     pushDot: function (e) {
 
-        log(this.clickCount);
+
+        log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
 
-        if (this.clickCount % 2 != 0){ // если нечетное (1 3 5)
-            let edge = new Edge();
+        if (this.clickCount % 2 != 0) { // если нечетное (1 3 5) / второй клик
+            // let edge = new Edge();
+            this.lastPoint = new Point({x, y}, 1); // вторая точка
+            log('второй клик')
         }
 
-        // State.structManager.buffer.push(new Struct('web'));
 
-        let point1 = new Point({x, y}, 5);
-        let point2 = new Point({x, y}, 5);
-        let edge = new Edge();
-        let struct = new Struct('web').add(edge);
-        State.structManager.buffer.push(struct);
+        log('первый клик');
+        if (this.clickCount == 4) {
+            log(this.struct)
+        }
+        //
+        //
+
+
+        let point1 = this.lastPoint || new Point({x, y}, 5); // создаем первую ноду или берем предыдущую
+
+        log(point1);
+
+        let point2 = new Point({x, y}, 5); // создаем вторую ноду
+
+        let edge = new Edge(); // создаем грань
+        edge.firstNode = point1;
+        edge.lastNode = point2;
+
+        this.struct.add(edge);
 
         canvas.addEventListener('mousemove', (e: MouseEvent) => {
             point2.x = e.offsetX;
             point2.y = e.offsetY;
 
-        } );
+        });
 
         // log(pushDot);
         // let edge = new Edge(point, point);
@@ -107,7 +143,8 @@ let o = {
     //
     // }
 };
-o.click();
+
+o.init();
 
 
 // let s = new DeviceAcceleration();

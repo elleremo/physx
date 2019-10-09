@@ -48,7 +48,7 @@ export class Render {
 
         // if (State.structManager.buffer.length == 0) return;
 
-        for (let struct of State.structManager.buffer) {
+        // for (let struct of State.structManager.buffer) {
 
             State.structManager.buffer.forEach((struct:Struct)=>{
                 struct.edges.forEach((edge:Edge)=>{
@@ -64,7 +64,7 @@ export class Render {
             //
             // p1.draw();
 
-        }
+        // }
 
 
 

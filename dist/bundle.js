@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-6621f384e1916065";
+/******/ 	  var id = "webpack-livereload-plugin-script-9b27d59e6ae6eeb1";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -219,20 +219,20 @@ class Render {
     draw() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
         // if (State.structManager.buffer.length == 0) return;
-        for (let struct of State.structManager.buffer) {
-            State.structManager.buffer.forEach((struct) => {
-                struct.edges.forEach((edge) => {
-                    edge.firstNode.draw();
-                    edge.lastNode.draw();
-                    edge.draw();
-                });
+        // for (let struct of State.structManager.buffer) {
+        State.structManager.buffer.forEach((struct) => {
+            struct.edges.forEach((edge) => {
+                edge.firstNode.draw();
+                edge.lastNode.draw();
+                edge.draw();
             });
-            // p1.move();
-            //
-            // p1.update();
-            //
-            // p1.draw();
-        }
+        });
+        // p1.move();
+        //
+        // p1.update();
+        //
+        // p1.draw();
+        // }
     }
     stopAnimate() {
         cancelAnimationFrame(this.RID);
@@ -495,7 +495,8 @@ let KeyMap = window.addEventListener("keyup", (e) => {
             // game.render.animate();
             log('space');
             break;
-        case "KeyL": break;
+        case "KeyL":
+            break;
     }
 });
 let resize = window.addEventListener("resize", () => {
@@ -512,26 +513,49 @@ let resize = window.addEventListener("resize", () => {
 // });
 let o = {
     clickCount: 0,
-    secondClick: {},
+    struct: undefined,
+    lastPoint: undefined,
+    init() {
+        this.struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web');
+        _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(this.struct);
+        o.click();
+    },
     click: function () {
         canvas.addEventListener("click", (e) => {
-            this.clickCount++;
             this.pushDot(e);
+            this.clickCount++;
         });
     },
+    // closure: function(p1){
+    //
+    //     let p2 = p1;
+    //
+    //     return function (p2) {
+    //         return p2 + p1;
+    //     }
+    // },
     pushDot: function (e) {
-        log(this.clickCount);
+        log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
-        if (this.clickCount % 2 != 0) { // если нечетное (1 3 5)
-            let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"]();
+        if (this.clickCount % 2 != 0) { // если нечетное (1 3 5) / второй клик
+            // let edge = new Edge();
+            this.lastPoint = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 1); // вторая точка
+            log('второй клик');
         }
-        // State.structManager.buffer.push(new Struct('web'));
-        let point1 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
-        let point2 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
-        let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"]();
-        let struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web').add(edge);
-        _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(struct);
+        log('первый клик');
+        if (this.clickCount == 4) {
+            log(this.struct);
+        }
+        //
+        //
+        let point1 = this.lastPoint || new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5); // создаем первую ноду или берем предыдущую
+        log(point1);
+        let point2 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5); // создаем вторую ноду
+        let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"](); // создаем грань
+        edge.firstNode = point1;
+        edge.lastNode = point2;
+        this.struct.add(edge);
         canvas.addEventListener('mousemove', (e) => {
             point2.x = e.offsetX;
             point2.y = e.offsetY;
@@ -544,7 +568,7 @@ let o = {
     //
     // }
 };
-o.click();
+o.init();
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {
 //     var aX = event.accelerationIncludingGravity.x*10;
