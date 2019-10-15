@@ -39,7 +39,7 @@ body{
 }
 
 #canvas {
-    border: 10px solid rgba(0, 0, 0, 0.17);
+    border: 5px solid rgba(0, 0, 0, 0.17);
     /*width: 100vw;*/
     /*height: 100vh;*/
 }

@@ -39,9 +39,8 @@ let KeyMap = window.addEventListener("keyup", (e) => {
 
     switch (e.code) {
         case "Space":
-            // game.render.animate();
-            log('space')
-            break;
+            log('space');
+             break;
         case "KeyL":break;
     }
 });
@@ -67,8 +66,8 @@ let o = {
     secondClick: {},
     click:function(){
         canvas.addEventListener("click",(e)=>{
-            this.clickCount++;
             this.pushDot(e);
+            this.clickCount++;
         });
     },
 
@@ -78,15 +77,21 @@ let o = {
         let x = e.offsetX;
         let y = e.offsetY;
 
+        let point1, point2;
+
         if (this.clickCount % 2 != 0){ // если нечетное (1 3 5)
             let edge = new Edge();
         }
 
         // State.structManager.buffer.push(new Struct('web'));
 
-        let point1 = new Point({x, y}, 5);
-        let point2 = new Point({x, y}, 5);
+         point1 = new Point({x, y}, 5);
+         point2 = new Point({x, y}, 5);
         let edge = new Edge();
+
+        edge.firstNode = point1;
+
+
         let struct = new Struct('web').add(edge);
         State.structManager.buffer.push(struct);
 
@@ -99,7 +104,7 @@ let o = {
         // log(pushDot);
         // let edge = new Edge(point, point);
         // game.addPoint(point);
-
+        //
     }
 
 
