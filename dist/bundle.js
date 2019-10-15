@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-e65fcf28f045bbb4";
+/******/ 	  var id = "webpack-livereload-plugin-script-89549dbae3373785";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -112,60 +112,6 @@ __webpack_require__.r(__webpack_exports__);
 ﻿
 
 let s = new _Vectrors__WEBPACK_IMPORTED_MODULE_0__["Vector"](4, 5);
-//
-// class DyPoint extends Point {
-//     typ: string = 'DyPoint';
-//     vel: Vector;
-//     acc: Vector;
-//     size: number = 10;
-//     par: Point;
-//     grav = new Vector(0,0.1);
-//     dist: number;
-//
-//     constructor(pos: Position, size?: number) {
-//         super(pos, size);
-//         this.vel = new Vector();
-//         this.acc = new Vector(0,0);
-//         this.size = size || 5;
-//     }
-//
-//     move() {
-//
-//
-//
-//         let distance = Vector.distance(this, this.par);
-//
-//         this.acc.y =  distance.length -this.acc.y;
-//         this.acc.x = distance.length - this.acc.x;
-//
-//         this.vel.x +=  this.acc.x;
-//         this.vel.y +=  this.acc.y;
-//
-//         this.x += this.vel.x;
-//         this.y += this.vel.y;
-//
-//
-//     }
-//
-//     animate() {
-//
-//         this.draw();
-//         this.move();
-//
-//         // let o = this;
-//         // let id = setInterval(function () {
-//         //     o.draw();
-//         //     o.move();
-//         // }, 16.6)
-//     }
-// }
-//
-// interface ISet {
-//     canvas: HTMLCanvasElement;
-//     ctx: CanvasRenderingContext2D;
-//     fixedPoints: Position;
-//     point: Position;
-// }
 class Game {
     constructor(setting) {
         // this.set.ctx = setting.canvas.getContext("2d");
@@ -199,12 +145,10 @@ __webpack_require__.r(__webpack_exports__);
 ﻿class State {
 }
 class Render {
-    constructor() {
-        this.points = [];
-    }
     clear() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
     }
+    ;
     // // addOncePoint(point: Point){
     // //     this.setting.Vpoints.push(point);
     // // }
@@ -217,23 +161,25 @@ class Render {
     //      this.draw()
     // }
     draw() {
-        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
+        this.clear();
         // if (State.structManager.buffer.length == 0) return;
-        for (let struct of State.structManager.buffer) {
-            State.structManager.buffer.forEach((struct) => {
-                struct.edges.forEach((edge) => {
-                    edge.firstNode.draw();
-                    edge.lastNode.draw();
-                    edge.draw();
-                });
-            });
-            // p1.move();
-            //
-            // p1.update();
-            //
-            // p1.draw();
-        }
+        // for (let struct of State.structManager.buffer) {
+        State.structManager.buffer.forEach((struct) => {
+            struct.draw();
+        });
+        State.structManager.structs.forEach((struct) => {
+            struct.move();
+            struct.solve();
+            struct.draw();
+        });
+        // p1.move();
+        //
+        // p1.update();
+        //
+        // p1.draw();
+        // }
     }
+    ;
     stopAnimate() {
         cancelAnimationFrame(this.RID);
     }
@@ -312,15 +258,75 @@ class StructManager {
         this.structs = [];
         this.buffer = [];
     }
+    addBuffer() {
+        for (let struct of this.buffer) {
+            this.structs.push(struct);
+        }
+        console.log('cleat buffer');
+        this.buffer = [];
+    }
 }
 class Struct {
     constructor(type) {
+        this.points = [];
         this.edges = [];
         this.type = 'web' || false || false;
         this.type = type;
         return this;
     }
-    add(edge) {
+    move() {
+        this.points.forEach((point) => {
+            point.move();
+        });
+    }
+    solve() {
+        this.edges.forEach((edge) => {
+            edge.solve();
+        });
+    }
+    draw() {
+        this.edges.forEach((edge) => {
+            edge.draw();
+        });
+        this.points.forEach((point) => {
+            point.draw();
+        });
+    }
+    addPoint(x, y) {
+        this.points.push(new Point({ x, y }, 1)); // добавляем точку
+        if (this.type == 'web')
+            this.generateWebEdge();
+        if (this.type == 'line')
+            this.generateLineEdge();
+    }
+    generateWebEdge() {
+        let lastPointIndex = this.points.length - 1;
+        let lastPoint = this.points[lastPointIndex];
+        if (lastPointIndex <= 0)
+            return;
+        for (let point of this.points) {
+            if (point == lastPoint)
+                continue;
+            let edge = new Edge();
+            edge.firstNode = point; //
+            edge.lastNode = lastPoint; //
+            edge.saveLength();
+            this.addEdge(edge);
+        }
+    }
+    generateLineEdge() {
+        let countPoints = this.points.length;
+        // let countEdges = this.edges.length;
+        if (countPoints <= 1)
+            return; //
+        console.log(!!countPoints);
+        let edge = new Edge();
+        edge.lastNode = this.points[countPoints - 1]; // последняя нода
+        edge.firstNode = this.points[countPoints - 2]; // предпоследняя нода
+        edge.saveLength();
+        this.addEdge(edge);
+    }
+    addEdge(edge) {
         this.edges.push(edge);
         return this;
     }
@@ -331,6 +337,23 @@ class Edge {
         // this.firstNode = first;
         // this.lastNode = last;
         // this.baseLength = Vector.distanceAB(first, last);
+    }
+    solve() {
+        let V1V2 = Vector.vectorAB(this.firstNode, this.lastNode); // вектор между вершинами
+        let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
+        let V1V2Length = V1V2.length; // дистаниця
+        let diff = (V1V2Length - this.baseLength) / 2;
+        if (this.firstNode.type !== 'static') {
+            this.firstNode.x += V1V2_Normalize.x * diff;
+            this.firstNode.y += V1V2_Normalize.y * diff;
+        }
+        if (this.lastNode.type !== 'static') {
+            this.lastNode.x -= V1V2_Normalize.x * diff;
+            this.lastNode.y -= V1V2_Normalize.y * diff;
+        }
+    }
+    saveLength() {
+        this.baseLength = Vector.distanceAB(this.firstNode, this.lastNode);
     }
     draw() {
         _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.beginPath();
@@ -347,7 +370,8 @@ class Point extends Vector {
         this.type = 'Point';
         this.vel = new Vector(0, 0);
         this.acc = new Vector(0, 0);
-        this.grav = 0.2;
+        this.grav = 0.5;
+        this.bounce = 1.8;
         this.oldx = 0;
         this.oldy = 0;
         // this.pos = new Vector();
@@ -415,27 +439,27 @@ class Point extends Vector {
                  let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
                  let V1V2Length = V1V2.length; // дистаниця
                  let diff = (V1V2Length - lock) / 20;
- 
+
                  if (this.type !== 'static') {
                      this.x += V1V2_Normalize.x * diff;
                      this.y += V1V2_Normalize.y * diff;
- 
+
                  }
                  if (p2.type !== 'static') {
                      p2.x -= V1V2_Normalize.x * diff;
                      p2.y -= V1V2_Normalize.y * diff;
                  }
- 
- 
+
+
                  // let plus = (diff / (80));
                  // p1.x += (plus * fVector.x);
                  // p1.y += (plus * fVector.y);
                  // // p2.x -= (plus*fVector.x );
                  // //     p2.y -= (plus*fVector.y );
- 
- 
+
+
              }
- 
+
          }*/
     }
     draw() {
@@ -472,8 +496,6 @@ let dpr = window.devicePixelRatio;
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
 let button = document.getElementById('button');
-canvas.width = 500;
-canvas.height = 500;
 log(canvas.width);
 const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
     canvas: canvas,
@@ -488,19 +510,27 @@ const game = new _Game__WEBPACK_IMPORTED_MODULE_0__["Game"]({
         { x: 400, y: 350 }
     ]
 });
+canvas.width = window.innerWidth; // УДОЛИ!
+canvas.height = window.innerHeight;
+_Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.width = window.innerWidth;
+_Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.height = window.innerHeight;
 game.render.animate();
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
+            _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer[0].points[0].type = 'static';
+            _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.addBuffer();
             log('space');
+            log(_Render__WEBPACK_IMPORTED_MODULE_2__["State"]);
             break;
-        case "KeyL": break;
+        case "KeyL":
+            break;
     }
 });
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
-    // canvas.width = window.innerWidth;  // УДОЛИ!
-    // canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth; // УДОЛИ!
+    canvas.height = window.innerHeight;
     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.width = window.innerWidth;
     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.height = window.innerHeight;
     // log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
@@ -511,42 +541,64 @@ let resize = window.addEventListener("resize", () => {
 // });
 let o = {
     clickCount: 0,
-    secondClick: {},
+    struct: undefined,
+    init() {
+        this.struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web');
+        _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(this.struct);
+        o.click();
+    },
     click: function () {
         canvas.addEventListener("click", (e) => {
             this.pushDot(e);
             this.clickCount++;
         });
     },
+    // closure: function(p1){
+    //
+    //     let p2 = p1;
+    //
+    //     return function (p2) {
+    //         return p2 + p1;
+    //     }
+    // },
     pushDot: function (e) {
-        log(this.clickCount);
+        // ! Не забудь что при обработке движения Edge должны обрабатывать только восстановление расстояний но не
+        // движение точек!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
-        let point1, point2;
-        if (this.clickCount % 2 != 0) { // если нечетное (1 3 5)
-            let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"]();
-        }
-        // State.structManager.buffer.push(new Struct('web'));
-        point1 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
-        point2 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
-        let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"]();
-        edge.firstNode = point1;
-        let struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web').add(edge);
-        _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(struct);
-        canvas.addEventListener('mousemove', (e) => {
-            point2.x = e.offsetX;
-            point2.y = e.offsetY;
-        });
+        this.struct.addPoint(x, y);
+        if (this.clickCount > 4)
+            log(this.struct);
+        // if (this.clickCount % 2 == 0) { // если первый клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        //
+        // }
+        //
+        // if (this.clickCount % 2 != 0) { // если второй клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        // }
+        //
+        //
+        // edge.firstNode = point1;
+        //
+        // this.lastEdge = edge;
+        //
+        // canvas.addEventListener('mousemove', (e: MouseEvent) => {
+        //     point.x = e.offsetX;
+        //     point.y = e.offsetY;
+        // });
         // log(pushDot);
         // let edge = new Edge(point, point);
         // game.addPoint(point);
-        //
     }
     //     canvas.addEventListener("click", (e: MouseEvent) => {
     //
     // }
 };
-o.click();
+o.init();
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {
 //     var aX = event.accelerationIncludingGravity.x*10;

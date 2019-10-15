@@ -1,12 +1,10 @@
 ﻿export class State {
 }
 export class Render {
-    constructor() {
-        this.points = [];
-    }
     clear() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
     }
+    ;
     // // addOncePoint(point: Point){
     // //     this.setting.Vpoints.push(point);
     // // }
@@ -19,23 +17,25 @@ export class Render {
     //      this.draw()
     // }
     draw() {
-        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
+        this.clear();
         // if (State.structManager.buffer.length == 0) return;
-        for (let struct of State.structManager.buffer) {
-            State.structManager.buffer.forEach((struct) => {
-                struct.edges.forEach((edge) => {
-                    edge.firstNode.draw();
-                    edge.lastNode.draw();
-                    edge.draw();
-                });
-            });
-            // p1.move();
-            //
-            // p1.update();
-            //
-            // p1.draw();
-        }
+        // for (let struct of State.structManager.buffer) {
+        State.structManager.buffer.forEach((struct) => {
+            struct.draw();
+        });
+        State.structManager.structs.forEach((struct) => {
+            struct.move();
+            struct.solve();
+            struct.draw();
+        });
+        // p1.move();
+        //
+        // p1.update();
+        //
+        // p1.draw();
+        // }
     }
+    ;
     stopAnimate() {
         cancelAnimationFrame(this.RID);
     }

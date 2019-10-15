@@ -9,12 +9,12 @@ let dpr = window.devicePixelRatio;
 
 let canvas: HTMLCanvasElement = window.document.querySelector('canvas');
 let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-let button = document.getElementById('button')
+let button = document.getElementById('button');
 
-canvas.width = 500;
-canvas.height = 500;
+
 
 log(canvas.width);
+
 
 const game = new Game({
     canvas: canvas,
@@ -31,7 +31,10 @@ const game = new Game({
         {x: 400, y: 350}
     ]
 });
-
+canvas.width = window.innerWidth;  // УДОЛИ!
+canvas.height = window.innerHeight;
+State.setting.width = window.innerWidth;
+State.setting.height = window.innerHeight;
 game.render.animate();
 
 
@@ -39,9 +42,13 @@ let KeyMap = window.addEventListener("keyup", (e) => {
 
     switch (e.code) {
         case "Space":
+            State.structManager.buffer[0].points[0].type = 'static';
+            State.structManager.addBuffer();
             log('space');
-             break;
-        case "KeyL":break;
+            log(State);
+            break;
+        case "KeyL":
+            break;
     }
 });
 
@@ -49,8 +56,8 @@ let resize = window.addEventListener("resize", () => {
 
 
     console.log('resize');
-    // canvas.width = window.innerWidth;  // УДОЛИ!
-    // canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;  // УДОЛИ!
+    canvas.height = window.innerHeight;
     State.setting.width = window.innerWidth;
     State.setting.height = window.innerHeight;
 
@@ -63,48 +70,70 @@ let resize = window.addEventListener("resize", () => {
 // });
 let o = {
     clickCount: 0,
-    secondClick: {},
-    click:function(){
-        canvas.addEventListener("click",(e)=>{
+    struct: undefined,
+
+    init() {
+        this.struct = new Struct('web');
+        State.structManager.buffer.push(this.struct);
+        o.click();
+    },
+
+    click: function () {
+        canvas.addEventListener("click", (e) => {
+
             this.pushDot(e);
             this.clickCount++;
+
         });
     },
 
-    pushDot: function (e) {
+    // closure: function(p1){
+    //
+    //     let p2 = p1;
+    //
+    //     return function (p2) {
+    //         return p2 + p1;
+    //     }
+    // },
 
-        log(this.clickCount);
+    pushDot: function (e) {
+        // ! Не забудь что при обработке движения Edge должны обрабатывать только восстановление расстояний но не
+        // движение точек!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
 
-        let point1, point2;
+        this.struct.addPoint(x , y);
 
-        if (this.clickCount % 2 != 0){ // если нечетное (1 3 5)
-            let edge = new Edge();
-        }
+        if (this.clickCount >4) log(this.struct);
 
-        // State.structManager.buffer.push(new Struct('web'));
+        // if (this.clickCount % 2 == 0) { // если первый клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        //
+        // }
+        //
+        // if (this.clickCount % 2 != 0) { // если второй клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        // }
+        //
+        //
+        // edge.firstNode = point1;
+        //
+        // this.lastEdge = edge;
 
-         point1 = new Point({x, y}, 5);
-         point2 = new Point({x, y}, 5);
-        let edge = new Edge();
-
-        edge.firstNode = point1;
-
-
-        let struct = new Struct('web').add(edge);
-        State.structManager.buffer.push(struct);
-
-        canvas.addEventListener('mousemove', (e: MouseEvent) => {
-            point2.x = e.offsetX;
-            point2.y = e.offsetY;
-
-        } );
+        //
+        // canvas.addEventListener('mousemove', (e: MouseEvent) => {
+        //     point.x = e.offsetX;
+        //     point.y = e.offsetY;
+        // });
 
         // log(pushDot);
         // let edge = new Edge(point, point);
         // game.addPoint(point);
-        //
+
     }
 
 
@@ -112,7 +141,8 @@ let o = {
     //
     // }
 };
-o.click();
+
+o.init();
 
 
 // let s = new DeviceAcceleration();

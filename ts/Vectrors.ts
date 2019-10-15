@@ -32,14 +32,23 @@ export class Vector {
 }
 
 
-
 export class StructManager {
-    public   structs: Struct[] = [];
-    public   buffer: Struct[] =[];
+    public structs: Struct[] = [];
+    public buffer: Struct[] = [];
+
+    addBuffer() {
+
+        for (let struct of this.buffer) {
+            this.structs.push(struct);
+        }
+        console.log('cleat buffer');
+        this.buffer = [];
+    }
 
 }
 
 export class Struct {
+    points: Point[] = [];
     edges: Edge[] = [];
     type: string = 'web' || 'line' || 'static';
 
@@ -49,7 +58,69 @@ export class Struct {
 
     }
 
-    add(edge: Edge) {
+    move() {
+        this.points.forEach((point: Point) => {
+            point.move();
+        });
+
+    }
+
+    solve(){
+        this.edges.forEach((edge: Edge) => {
+            edge.solve();
+        });
+    }
+
+    draw() {
+        this.edges.forEach((edge: Edge) => {
+            edge.draw();
+        });
+        this.points.forEach((point: Point) => {
+            point.draw();
+        })
+    }
+
+    addPoint(x: number, y: number) {
+
+        this.points.push(new Point({x, y}, 1)); // добавляем точку
+
+        if (this.type == 'web') this.generateWebEdge();
+
+        if (this.type == 'line') this.generateLineEdge();
+    }
+
+    generateWebEdge() {
+        let lastPointIndex = this.points.length - 1;
+        let lastPoint = this.points[lastPointIndex];
+
+        if (lastPointIndex <= 0) return;
+
+        for (let point of this.points) {
+            if (point == lastPoint) continue;
+
+            let edge = new Edge();
+            edge.firstNode = point; //
+            edge.lastNode = lastPoint; //
+            edge.saveLength();
+            this.addEdge(edge);
+        }
+    }
+
+    generateLineEdge() {
+        let countPoints = this.points.length;
+        // let countEdges = this.edges.length;
+
+        if (countPoints <= 1) return; //
+        console.log(!!countPoints);
+
+        let edge = new Edge();
+        edge.lastNode = this.points[countPoints - 1]; // последняя нода
+        edge.firstNode = this.points[countPoints - 2]; // предпоследняя нода
+        edge.saveLength();
+        this.addEdge(edge);
+    }
+
+    addEdge(edge: Edge) {
         this.edges.push(edge);
         return this;
 
@@ -61,19 +132,46 @@ export class Edge {
     lastNode: Point;
     baseLength: number;
 
-    constructor( ) {
+    constructor() {
         //
         // this.firstNode = first;
         // this.lastNode = last;
         // this.baseLength = Vector.distanceAB(first, last);
     }
 
-    draw():void{
+    solve(): void {
+        let V1V2 = Vector.vectorAB(this.firstNode, this.lastNode); // вектор между вершинами
+        let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
+        let V1V2Length = V1V2.length; // дистаниця
+        let diff = (V1V2Length - this.baseLength) / 2;
+
+
+            if (this.firstNode.type !== 'static') {
+                this.firstNode.x += V1V2_Normalize.x * diff;
+                this.firstNode.y += V1V2_Normalize.y * diff;
+            }
+
+            if (this.lastNode.type !== 'static') {
+                this.lastNode.x -= V1V2_Normalize.x * diff;
+                this.lastNode.y -= V1V2_Normalize.y * diff;
+            }
+
+
+
+
+
+    }
+
+    saveLength() {
+        this.baseLength = Vector.distanceAB(this.firstNode, this.lastNode);
+
+    }
+
+    draw(): void {
         State.setting.ctx.beginPath();
         State.setting.ctx.moveTo(this.firstNode.x, this.firstNode.y);
         State.setting.ctx.lineTo(this.lastNode.x, this.lastNode.y);
         State.setting.ctx.strokeStyle = 'rgba(81,184,255,0.76)';
-
         State.setting.ctx.lineWidth = 1.5;
         State.setting.ctx.stroke();
     }
@@ -85,8 +183,8 @@ export class Point extends Vector {
     size: number;
     vel: Vector = new Vector(0, 0);
     acc: Vector = new Vector(0, 0);
-    grav: number = 0.2;
-
+    grav: number = 0.5;
+    bounce: number = 1.8;
     oldx: number = 0;
     oldy: number = 0;
 
@@ -140,6 +238,8 @@ export class Point extends Vector {
         // this.vel.y += this.acc.y + this.grav;
         // this.vel.x += this.acc.x ;
 
+
+
         let x = this.x;
         let y = this.y;
         this.x += this.x - this.oldx + this.acc.x ** 2;
@@ -165,35 +265,35 @@ export class Point extends Vector {
     update() {
 
         let lock = 100;
-       /* for (let p2 of State.setting.Vpoints) {
-            // if(p2.type === 'static') continue;
-            if (this !== p2) {
-                let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
-                let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
-                let V1V2Length = V1V2.length; // дистаниця
-                let diff = (V1V2Length - lock) / 20;
+        /* for (let p2 of State.setting.Vpoints) {
+             // if(p2.type === 'static') continue;
+             if (this !== p2) {
+                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
+                 let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
+                 let V1V2Length = V1V2.length; // дистаниця
+                 let diff = (V1V2Length - lock) / 20;
 
-                if (this.type !== 'static') {
-                    this.x += V1V2_Normalize.x * diff;
-                    this.y += V1V2_Normalize.y * diff;
+                 if (this.type !== 'static') {
+                     this.x += V1V2_Normalize.x * diff;
+                     this.y += V1V2_Normalize.y * diff;
 
-                }
-                if (p2.type !== 'static') {
-                    p2.x -= V1V2_Normalize.x * diff;
-                    p2.y -= V1V2_Normalize.y * diff;
-                }
-
-
-                // let plus = (diff / (80));
-                // p1.x += (plus * fVector.x);
-                // p1.y += (plus * fVector.y);
-                // // p2.x -= (plus*fVector.x );
-                // //     p2.y -= (plus*fVector.y );
+                 }
+                 if (p2.type !== 'static') {
+                     p2.x -= V1V2_Normalize.x * diff;
+                     p2.y -= V1V2_Normalize.y * diff;
+                 }
 
 
-            }
+                 // let plus = (diff / (80));
+                 // p1.x += (plus * fVector.x);
+                 // p1.y += (plus * fVector.y);
+                 // // p2.x -= (plus*fVector.x );
+                 // //     p2.y -= (plus*fVector.y );
 
-        }*/
+
+             }
+
+         }*/
     }
 
     draw() {

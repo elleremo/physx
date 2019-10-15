@@ -1,13 +1,11 @@
 ﻿import { Game } from "./Game";
-import { Edge, Point, Struct } from "./Vectrors";
+import { Struct } from "./Vectrors";
 import { State } from "./Render";
 let log = console.log;
 let dpr = window.devicePixelRatio;
 let canvas = window.document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
 let button = document.getElementById('button');
-canvas.width = 500;
-canvas.height = 500;
 log(canvas.width);
 const game = new Game({
     canvas: canvas,
@@ -22,19 +20,27 @@ const game = new Game({
         { x: 400, y: 350 }
     ]
 });
+canvas.width = window.innerWidth; // УДОЛИ!
+canvas.height = window.innerHeight;
+State.setting.width = window.innerWidth;
+State.setting.height = window.innerHeight;
 game.render.animate();
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
+            State.structManager.buffer[0].points[0].type = 'static';
+            State.structManager.addBuffer();
             log('space');
+            log(State);
             break;
-        case "KeyL": break;
+        case "KeyL":
+            break;
     }
 });
 let resize = window.addEventListener("resize", () => {
     console.log('resize');
-    // canvas.width = window.innerWidth;  // УДОЛИ!
-    // canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth; // УДОЛИ!
+    canvas.height = window.innerHeight;
     State.setting.width = window.innerWidth;
     State.setting.height = window.innerHeight;
     // log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
@@ -45,42 +51,64 @@ let resize = window.addEventListener("resize", () => {
 // });
 let o = {
     clickCount: 0,
-    secondClick: {},
+    struct: undefined,
+    init() {
+        this.struct = new Struct('web');
+        State.structManager.buffer.push(this.struct);
+        o.click();
+    },
     click: function () {
         canvas.addEventListener("click", (e) => {
             this.pushDot(e);
             this.clickCount++;
         });
     },
+    // closure: function(p1){
+    //
+    //     let p2 = p1;
+    //
+    //     return function (p2) {
+    //         return p2 + p1;
+    //     }
+    // },
     pushDot: function (e) {
-        log(this.clickCount);
+        // ! Не забудь что при обработке движения Edge должны обрабатывать только восстановление расстояний но не
+        // движение точек!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
-        let point1, point2;
-        if (this.clickCount % 2 != 0) { // если нечетное (1 3 5)
-            let edge = new Edge();
-        }
-        // State.structManager.buffer.push(new Struct('web'));
-        point1 = new Point({ x, y }, 5);
-        point2 = new Point({ x, y }, 5);
-        let edge = new Edge();
-        edge.firstNode = point1;
-        let struct = new Struct('web').add(edge);
-        State.structManager.buffer.push(struct);
-        canvas.addEventListener('mousemove', (e) => {
-            point2.x = e.offsetX;
-            point2.y = e.offsetY;
-        });
+        this.struct.addPoint(x, y);
+        if (this.clickCount > 4)
+            log(this.struct);
+        // if (this.clickCount % 2 == 0) { // если первый клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        //
+        // }
+        //
+        // if (this.clickCount % 2 != 0) { // если второй клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        // }
+        //
+        //
+        // edge.firstNode = point1;
+        //
+        // this.lastEdge = edge;
+        //
+        // canvas.addEventListener('mousemove', (e: MouseEvent) => {
+        //     point.x = e.offsetX;
+        //     point.y = e.offsetY;
+        // });
         // log(pushDot);
         // let edge = new Edge(point, point);
         // game.addPoint(point);
-        //
     }
     //     canvas.addEventListener("click", (e: MouseEvent) => {
     //
     // }
 };
-o.click();
+o.init();
 // let s = new DeviceAcceleration();
 // function accelerometerUpdate(event) {
 //     var aX = event.accelerationIncludingGravity.x*10;

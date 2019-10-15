@@ -1,6 +1,6 @@
 import {Vector, StructManager, Struct, Edge, Point} from "./Vectrors";
 
-export interface ISetting  {
+export interface ISetting {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     width: number;
@@ -9,25 +9,21 @@ export interface ISetting  {
 
 }
 
-export class State{
-    static structManager: StructManager ;
+export class State {
+    static structManager: StructManager;
     static setting: ISetting;
 }
 
 
 export class Render {
 
-    points: Point[] = [];
+    // points: Point[] = [];
     RID: number;
 
-    constructor() {
 
-
-    }
-
-    clear (){
+    clear() {
         State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
-    }
+    };
 
     // // addOncePoint(point: Point){
     // //     this.setting.Vpoints.push(point);
@@ -44,35 +40,35 @@ export class Render {
 
     draw() {
 
-        State.setting.ctx.clearRect(0, 0, State.setting.width, State.setting.height);
+        this.clear();
 
         // if (State.structManager.buffer.length == 0) return;
 
-        for (let struct of State.structManager.buffer) {
+        // for (let struct of State.structManager.buffer) {
 
-            State.structManager.buffer.forEach((struct:Struct)=>{
-                struct.edges.forEach((edge:Edge)=>{
-                    edge.firstNode.draw();
-                    edge.lastNode.draw();
-                    edge.draw();
-                })
-            })
+        State.structManager.buffer.forEach((struct: Struct) => {
+            struct.draw();
+        });
 
-            // p1.move();
-            //
-            // p1.update();
-            //
-            // p1.draw();
+        State.structManager.structs.forEach((struct: Struct) => {
 
-        }
+            struct.move();
+            struct.solve();
+            struct.draw();
+        })
+
+        // p1.move();
+        //
+        // p1.update();
+        //
+        // p1.draw();
+
+        // }
 
 
+    };
 
-
-
-    }
-
-    stopAnimate(){
+    stopAnimate() {
         cancelAnimationFrame(this.RID);
     }
 
