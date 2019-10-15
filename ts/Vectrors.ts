@@ -32,14 +32,14 @@ export class Vector {
 }
 
 
-
 export class StructManager {
-    public   structs: Struct[] = [];
-    public   buffer: Struct[] =[];
+    public structs: Struct[] = [];
+    public buffer: Struct[] = [];
 
 }
 
 export class Struct {
+    ponts: Point[] = [];
     edges: Edge[] = [];
     type: string = 'web' || 'line' || 'static';
 
@@ -49,7 +49,22 @@ export class Struct {
 
     }
 
-    add(edge: Edge) {
+    addPoint(x: number, y: number) {
+
+        let countPoints = this.ponts.length;
+        let countEdges = this.edges.length;
+
+        if (this.ponts.length == 0) { // если это первая точка
+            this.ponts.push(new Point({x, y}, 5)); // добавляем точку
+        }
+
+        if (this.ponts.length != 0){ // если точек больше нуля -- нечетное количество ( 1 3 5 )
+
+        }
+
+    }
+
+    addEdge(edge: Edge) {
         this.edges.push(edge);
         return this;
 
@@ -61,19 +76,22 @@ export class Edge {
     lastNode: Point;
     baseLength: number;
 
-    constructor( ) {
+    constructor() {
         //
         // this.firstNode = first;
         // this.lastNode = last;
         // this.baseLength = Vector.distanceAB(first, last);
     }
 
-    draw():void{
+    solve(): void {
+
+    }
+
+    draw(): void {
         State.setting.ctx.beginPath();
         State.setting.ctx.moveTo(this.firstNode.x, this.firstNode.y);
         State.setting.ctx.lineTo(this.lastNode.x, this.lastNode.y);
         State.setting.ctx.strokeStyle = 'rgba(81,184,255,0.76)';
-
         State.setting.ctx.lineWidth = 1.5;
         State.setting.ctx.stroke();
     }
@@ -165,35 +183,35 @@ export class Point extends Vector {
     update() {
 
         let lock = 100;
-       /* for (let p2 of State.setting.Vpoints) {
-            // if(p2.type === 'static') continue;
-            if (this !== p2) {
-                let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
-                let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
-                let V1V2Length = V1V2.length; // дистаниця
-                let diff = (V1V2Length - lock) / 20;
+        /* for (let p2 of State.setting.Vpoints) {
+             // if(p2.type === 'static') continue;
+             if (this !== p2) {
+                 let V1V2 = Vector.vectorAB(this, p2); // вектор между вершинами
+                 let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
+                 let V1V2Length = V1V2.length; // дистаниця
+                 let diff = (V1V2Length - lock) / 20;
 
-                if (this.type !== 'static') {
-                    this.x += V1V2_Normalize.x * diff;
-                    this.y += V1V2_Normalize.y * diff;
+                 if (this.type !== 'static') {
+                     this.x += V1V2_Normalize.x * diff;
+                     this.y += V1V2_Normalize.y * diff;
 
-                }
-                if (p2.type !== 'static') {
-                    p2.x -= V1V2_Normalize.x * diff;
-                    p2.y -= V1V2_Normalize.y * diff;
-                }
-
-
-                // let plus = (diff / (80));
-                // p1.x += (plus * fVector.x);
-                // p1.y += (plus * fVector.y);
-                // // p2.x -= (plus*fVector.x );
-                // //     p2.y -= (plus*fVector.y );
+                 }
+                 if (p2.type !== 'static') {
+                     p2.x -= V1V2_Normalize.x * diff;
+                     p2.y -= V1V2_Normalize.y * diff;
+                 }
 
 
-            }
+                 // let plus = (diff / (80));
+                 // p1.x += (plus * fVector.x);
+                 // p1.y += (plus * fVector.y);
+                 // // p2.x -= (plus*fVector.x );
+                 // //     p2.y -= (plus*fVector.y );
 
-        }*/
+
+             }
+
+         }*/
     }
 
     draw() {

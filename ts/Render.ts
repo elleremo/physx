@@ -52,8 +52,8 @@ export class Render {
 
             State.structManager.buffer.forEach((struct:Struct)=>{
                 struct.edges.forEach((edge:Edge)=>{
-                    edge.firstNode.draw();
-                    edge.lastNode.draw();
+                    edge.firstNode.draw() ;
+                    edge.lastNode.draw()  ;
                     edge.draw();
                 })
             })

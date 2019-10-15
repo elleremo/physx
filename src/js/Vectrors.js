@@ -26,12 +26,22 @@ export class StructManager {
 }
 export class Struct {
     constructor(type) {
+        this.ponts = [];
         this.edges = [];
         this.type = 'web' || 'line' || 'static';
         this.type = type;
         return this;
     }
-    add(edge) {
+    addPoint(x, y) {
+        let countPoints = this.ponts.length;
+        let countEdges = this.edges.length;
+        if (this.ponts.length == 0) { // если это первая точка
+            this.ponts.push(new Point({ x, y }, 5)); // добавляем точку
+        }
+        if (this.ponts.length != 0) { // если точек больше нуля -- нечетное количество ( 1 3 5 )
+        }
+    }
+    addEdge(edge) {
         this.edges.push(edge);
         return this;
     }
@@ -42,6 +52,8 @@ export class Edge {
         // this.firstNode = first;
         // this.lastNode = last;
         // this.baseLength = Vector.distanceAB(first, last);
+    }
+    solve() {
     }
     draw() {
         State.setting.ctx.beginPath();
@@ -126,27 +138,27 @@ export class Point extends Vector {
                  let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
                  let V1V2Length = V1V2.length; // дистаниця
                  let diff = (V1V2Length - lock) / 20;
- 
+
                  if (this.type !== 'static') {
                      this.x += V1V2_Normalize.x * diff;
                      this.y += V1V2_Normalize.y * diff;
- 
+
                  }
                  if (p2.type !== 'static') {
                      p2.x -= V1V2_Normalize.x * diff;
                      p2.y -= V1V2_Normalize.y * diff;
                  }
- 
- 
+
+
                  // let plus = (diff / (80));
                  // p1.x += (plus * fVector.x);
                  // p1.y += (plus * fVector.y);
                  // // p2.x -= (plus*fVector.x );
                  // //     p2.y -= (plus*fVector.y );
- 
- 
+
+
              }
- 
+
          }*/
     }
     draw() {

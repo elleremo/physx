@@ -48,7 +48,7 @@ let resize = window.addEventListener("resize", () => {
 let o = {
     clickCount: 0,
     struct: undefined,
-    lastPoint: undefined,
+    lastEdge: undefined,
     init() {
         this.struct = new Struct('web');
         State.structManager.buffer.push(this.struct);
@@ -69,30 +69,52 @@ let o = {
     //     }
     // },
     pushDot: function (e) {
+        // ! Не забудь что при обработке движения Edge должны обрабатывать только восстановление расстояний но не
+        // движение точек!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
+        let point;
+        let edge;
         if (this.clickCount % 2 != 0) { // если нечетное (1 3 5) / второй клик
             // let edge = new Edge();
             this.lastPoint = new Point({ x, y }, 1); // вторая точка
             log('второй клик');
         }
-        log('первый клик');
         if (this.clickCount == 4) {
             log(this.struct);
         }
+        if (this.clickCount == 0) { // если первый клик
+            edge = new Edge(); // создаем грань
+            point = new Point({ x, y }, 5);
+            edge.firstNode = point;
+            this.lastEdge = edge;
+        }
+        else {
+            edge = new Edge();
+            point = new Point({ x, y }, 5);
+            this.lastEdge.lastNode = point;
+        }
+        // if (this.clickCount % 2 == 0) { // если первый клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        //
+        // }
+        //
+        // if (this.clickCount % 2 != 0) { // если второй клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        // }
         //
         //
-        let point1 = this.lastPoint || new Point({ x, y }, 5); // создаем первую ноду или берем предыдущую
-        log(point1);
-        let point2 = new Point({ x, y }, 5); // создаем вторую ноду
-        let edge = new Edge(); // создаем грань
-        edge.firstNode = point1;
-        edge.lastNode = point2;
+        // edge.firstNode = point1;
+        //
+        // this.lastEdge = edge;
         this.struct.add(edge);
+        //
         canvas.addEventListener('mousemove', (e) => {
-            point2.x = e.offsetX;
-            point2.y = e.offsetY;
+            point.x = e.offsetX;
+            point.y = e.offsetY;
         });
         // log(pushDot);
         // let edge = new Edge(point, point);

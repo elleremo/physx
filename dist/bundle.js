@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-9b27d59e6ae6eeb1";
+/******/ 	  var id = "webpack-livereload-plugin-script-264cd78ab88bb695";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -315,12 +315,22 @@ class StructManager {
 }
 class Struct {
     constructor(type) {
+        this.ponts = [];
         this.edges = [];
         this.type = 'web' || false || false;
         this.type = type;
         return this;
     }
-    add(edge) {
+    addPoint(x, y) {
+        let countPoints = this.ponts.length;
+        let countEdges = this.edges.length;
+        if (this.ponts.length == 0) { // если это первая точка
+            this.ponts.push(new Point({ x, y }, 5)); // добавляем точку
+        }
+        if (this.ponts.length != 0) { // если точек больше нуля -- нечетное количество ( 1 3 5 )
+        }
+    }
+    addEdge(edge) {
         this.edges.push(edge);
         return this;
     }
@@ -331,6 +341,8 @@ class Edge {
         // this.firstNode = first;
         // this.lastNode = last;
         // this.baseLength = Vector.distanceAB(first, last);
+    }
+    solve() {
     }
     draw() {
         _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.ctx.beginPath();
@@ -415,27 +427,27 @@ class Point extends Vector {
                  let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
                  let V1V2Length = V1V2.length; // дистаниця
                  let diff = (V1V2Length - lock) / 20;
- 
+
                  if (this.type !== 'static') {
                      this.x += V1V2_Normalize.x * diff;
                      this.y += V1V2_Normalize.y * diff;
- 
+
                  }
                  if (p2.type !== 'static') {
                      p2.x -= V1V2_Normalize.x * diff;
                      p2.y -= V1V2_Normalize.y * diff;
                  }
- 
- 
+
+
                  // let plus = (diff / (80));
                  // p1.x += (plus * fVector.x);
                  // p1.y += (plus * fVector.y);
                  // // p2.x -= (plus*fVector.x );
                  // //     p2.y -= (plus*fVector.y );
- 
- 
+
+
              }
- 
+
          }*/
     }
     draw() {
@@ -514,7 +526,7 @@ let resize = window.addEventListener("resize", () => {
 let o = {
     clickCount: 0,
     struct: undefined,
-    lastPoint: undefined,
+    lastEdge: undefined,
     init() {
         this.struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web');
         _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(this.struct);
@@ -535,30 +547,52 @@ let o = {
     //     }
     // },
     pushDot: function (e) {
+        // ! Не забудь что при обработке движения Edge должны обрабатывать только восстановление расстояний но не
+        // движение точек!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         log('clickCount: ', this.clickCount);
         let x = e.offsetX;
         let y = e.offsetY;
+        let point;
+        let edge;
         if (this.clickCount % 2 != 0) { // если нечетное (1 3 5) / второй клик
             // let edge = new Edge();
             this.lastPoint = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 1); // вторая точка
             log('второй клик');
         }
-        log('первый клик');
         if (this.clickCount == 4) {
             log(this.struct);
         }
+        if (this.clickCount == 0) { // если первый клик
+            edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"](); // создаем грань
+            point = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
+            edge.firstNode = point;
+            this.lastEdge = edge;
+        }
+        else {
+            edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"]();
+            point = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5);
+            this.lastEdge.lastNode = point;
+        }
+        // if (this.clickCount % 2 == 0) { // если первый клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        //
+        // }
+        //
+        // if (this.clickCount % 2 != 0) { // если второй клик
+        //     edge = new Edge(); // создаем грань
+        //     edge.firstNode = new Point({x, y}, 5);
+        // }
         //
         //
-        let point1 = this.lastPoint || new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5); // создаем первую ноду или берем предыдущую
-        log(point1);
-        let point2 = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Point"]({ x, y }, 5); // создаем вторую ноду
-        let edge = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Edge"](); // создаем грань
-        edge.firstNode = point1;
-        edge.lastNode = point2;
+        // edge.firstNode = point1;
+        //
+        // this.lastEdge = edge;
         this.struct.add(edge);
+        //
         canvas.addEventListener('mousemove', (e) => {
-            point2.x = e.offsetX;
-            point2.y = e.offsetY;
+            point.x = e.offsetX;
+            point.y = e.offsetY;
         });
         // log(pushDot);
         // let edge = new Edge(point, point);
