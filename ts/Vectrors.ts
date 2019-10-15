@@ -54,12 +54,13 @@ export class Struct {
         let countPoints = this.ponts.length;
         let countEdges = this.edges.length;
 
-        if (this.ponts.length == 0) { // если это первая точка
-            this.ponts.push(new Point({x, y}, 5)); // добавляем точку
-        }
 
-        if (this.ponts.length != 0){ // если точек больше нуля -- нечетное количество ( 1 3 5 )
+        this.ponts.push(new Point({x, y}, 5)); // добавляем точку
 
+
+        if (this.ponts.length % 2 != 0) { // если  нечетное количество ( 1 3 5 )
+            let edge = new Edge();
+            this.ponts.
         }
 
     }
