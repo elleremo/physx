@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-89549dbae3373785";
+/******/ 	  var id = "webpack-livereload-plugin-script-d1412d5d5466881d";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -276,7 +276,7 @@ class Struct {
     }
     move() {
         this.points.forEach((point) => {
-            point.move();
+            point.moveVerle();
         });
     }
     solve() {
@@ -383,7 +383,57 @@ class Point extends Vector {
         // this.vel.x = Math.random()*2 ;
         // this.vel.y = Math.random()*2 ;
     }
-    move() {
+    moveEuler() {
+        if (this.type === 'static')
+            return;
+        // if (this.y < this.size) {
+        //     let n = this.y;
+        //     this.y = this.size  ;
+        //     this.oldy =   n;
+        // }
+        // if (this.x > this.setting.width - this.size) {
+        //     let n = this.x;
+        //     this.x = this.setting.width -this.size;
+        //     this.oldx = n;
+        // }
+        // if (this.x <   this.size ) {
+        //     let n = this.x;
+        //     this.x = this.size;
+        //     this.oldx = n;
+        // }
+        // this.vel.y +=   this.grav;
+        // if (this.type !== 'static') {
+        //     let tempx = this.x;
+        //     let tempy = this.y;
+        //
+        //     this.acc.y += this.grav;
+        //     this.x +=  this.x - this.oldx + this.acc.x ** 2;
+        //     this.y +=  this.y - this.oldy + this.acc.y ** 2;
+        //
+        //     this.oldx = tempx ;
+        //     this.oldy = tempy;
+        // };
+        // this.vel.y += this.acc.y + this.grav;
+        // this.vel.x += this.acc.x ;
+        this.vel.x += this.acc.x;
+        this.vel.y += this.acc.y + this.grav;
+        this.x += this.vel.x;
+        this.y += this.vel.y;
+        // let x = this.x;
+        // let y = this.y;
+        // this.x += this.x - this.oldx + this.acc.x;
+        // this.y += this.y - this.oldy + this.acc.y;
+        //
+        // this.oldx = x;
+        // this.oldy = y;
+        if (this.y >= _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.height - this.size) {
+            this.y = _Render__WEBPACK_IMPORTED_MODULE_0__["State"].setting.height - this.size;
+            this.vel.y = (-this.vel.y) / 2;
+            // this.oldx = this.x - (this.x-this.oldx)*0.1;
+            // this.vel.y = -this.vel.y;
+        }
+    }
+    moveVerle() {
         if (this.type === 'static')
             return;
         // if (this.y < this.size) {
@@ -417,7 +467,7 @@ class Point extends Vector {
         // this.vel.x += this.acc.x ;
         let x = this.x;
         let y = this.y;
-        this.x += this.x - this.oldx + this.acc.x ** 2;
+        this.x += this.x - this.oldx + this.acc.x;
         this.y += this.y - this.oldy + this.acc.y ** 2 + this.grav ** 2;
         this.oldx = x;
         this.oldy = y;
@@ -515,20 +565,23 @@ canvas.height = window.innerHeight;
 _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.width = window.innerWidth;
 _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.height = window.innerHeight;
 game.render.animate();
+button.addEventListener("click", (e) => {
+    log('button');
+    _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.addBuffer();
+});
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer[0].points[0].type = 'static';
+            // State.structManager.buffer[0].points[0].type = 'static';
             _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.addBuffer();
             log('space');
-            log(_Render__WEBPACK_IMPORTED_MODULE_2__["State"]);
+            // log(State);
             break;
         case "KeyL":
             break;
     }
 });
 let resize = window.addEventListener("resize", () => {
-    console.log('resize');
     canvas.width = window.innerWidth; // УДОЛИ!
     canvas.height = window.innerHeight;
     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].setting.width = window.innerWidth;
@@ -544,6 +597,7 @@ let o = {
     struct: undefined,
     init() {
         this.struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web');
+        // this.struct = new Struct('line');
         _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(this.struct);
         o.click();
     },
@@ -568,8 +622,7 @@ let o = {
         let x = e.offsetX;
         let y = e.offsetY;
         this.struct.addPoint(x, y);
-        if (this.clickCount > 4)
-            log(this.struct);
+        // if (this.clickCount >4) log(this.struct);
         // if (this.clickCount % 2 == 0) { // если первый клик
         //     edge = new Edge(); // создаем грань
         //     edge.firstNode = new Point({x, y}, 5);

@@ -3,7 +3,6 @@ import {Edge, Point, Struct, StructManager} from "./Vectrors";
 import {State} from "./Render";
 
 let log = console.log;
-
 let dpr = window.devicePixelRatio;
 
 
@@ -31,21 +30,28 @@ const game = new Game({
         {x: 400, y: 350}
     ]
 });
+
 canvas.width = window.innerWidth;  // УДОЛИ!
 canvas.height = window.innerHeight;
 State.setting.width = window.innerWidth;
 State.setting.height = window.innerHeight;
+
 game.render.animate();
 
+
+button.addEventListener("click", (e) => {
+    log('button');
+    State.structManager.addBuffer();
+});
 
 let KeyMap = window.addEventListener("keyup", (e) => {
 
     switch (e.code) {
         case "Space":
-            State.structManager.buffer[0].points[0].type = 'static';
+            // State.structManager.buffer[0].points[0].type = 'static';
             State.structManager.addBuffer();
             log('space');
-            log(State);
+            // log(State);
             break;
         case "KeyL":
             break;
@@ -55,11 +61,12 @@ let KeyMap = window.addEventListener("keyup", (e) => {
 let resize = window.addEventListener("resize", () => {
 
 
-    console.log('resize');
     canvas.width = window.innerWidth;  // УДОЛИ!
     canvas.height = window.innerHeight;
     State.setting.width = window.innerWidth;
     State.setting.height = window.innerHeight;
+
+
 
     // log('width:' + window.innerWidth, 'height: ' + window.innerHeight)
 
@@ -74,6 +81,7 @@ let o = {
 
     init() {
         this.struct = new Struct('web');
+        // this.struct = new Struct('line');
         State.structManager.buffer.push(this.struct);
         o.click();
     },
@@ -106,7 +114,7 @@ let o = {
 
         this.struct.addPoint(x , y);
 
-        if (this.clickCount >4) log(this.struct);
+        // if (this.clickCount >4) log(this.struct);
 
         // if (this.clickCount % 2 == 0) { // если первый клик
         //     edge = new Edge(); // создаем грань
