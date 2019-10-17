@@ -28,7 +28,7 @@ game.render.animate();
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            State.structManager.buffer[0].points[0].type = 'static';
+            // State.structManager.buffer[0].points[0].type = 'static';
             State.structManager.addBuffer();
             log('space');
             log(State);

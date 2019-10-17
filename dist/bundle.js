@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-89549dbae3373785";
+/******/ 	  var id = "webpack-livereload-plugin-script-9e5d930a490a910b";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -518,7 +518,7 @@ game.render.animate();
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer[0].points[0].type = 'static';
+            // State.structManager.buffer[0].points[0].type = 'static';
             _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.addBuffer();
             log('space');
             log(_Render__WEBPACK_IMPORTED_MODULE_2__["State"]);
