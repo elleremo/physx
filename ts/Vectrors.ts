@@ -60,21 +60,21 @@ export class Struct {
 
     move() {
         this.points.forEach((point: Point) => {
-            point.move();
+            point.moveVerle();
         });
 
     }
 
-    solve(){
+    solve() {
         this.edges.forEach((edge: Edge) => {
             edge.solve();
         });
     }
 
     draw() {
-        this.edges.forEach((edge: Edge) => {
-            edge.draw();
-        });
+        // this.edges.forEach((edge: Edge) => {
+        //     edge.draw();
+        // });
         this.points.forEach((point: Point) => {
             point.draw();
         })
@@ -82,7 +82,7 @@ export class Struct {
 
     addPoint(x: number, y: number) {
 
-        this.points.push(new Point({x, y}, 1)); // добавляем точку
+        this.points.push(new Point({x, y}, 2)); // добавляем точку
 
         if (this.type == 'web') this.generateWebEdge();
 
@@ -143,22 +143,18 @@ export class Edge {
         let V1V2 = Vector.vectorAB(this.firstNode, this.lastNode); // вектор между вершинами
         let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
         let V1V2Length = V1V2.length; // дистаниця
-        let diff = (V1V2Length - this.baseLength) / 2;
+        let diff = (V1V2Length - this.baseLength) / 10;
 
 
-            if (this.firstNode.type !== 'static') {
-                this.firstNode.x += V1V2_Normalize.x * diff;
-                this.firstNode.y += V1V2_Normalize.y * diff;
-            }
+        if (this.firstNode.type !== 'static') {
+            this.firstNode.x += V1V2_Normalize.x * diff;
+            this.firstNode.y += V1V2_Normalize.y * diff;
+        }
 
-            if (this.lastNode.type !== 'static') {
-                this.lastNode.x -= V1V2_Normalize.x * diff;
-                this.lastNode.y -= V1V2_Normalize.y * diff;
-            }
-
-
-
-
+        if (this.lastNode.type !== 'static') {
+            this.lastNode.x -= V1V2_Normalize.x * diff;
+            this.lastNode.y -= V1V2_Normalize.y * diff;
+        }
 
     }
 
@@ -201,7 +197,66 @@ export class Point extends Vector {
         // this.vel.y = Math.random()*2 ;
     }
 
-    move() {
+    moveEuler(){
+        if (this.type === 'static') return;
+
+
+        // if (this.y < this.size) {
+        //     let n = this.y;
+        //     this.y = this.size  ;
+        //     this.oldy =   n;
+        // }
+        // if (this.x > this.setting.width - this.size) {
+        //     let n = this.x;
+        //     this.x = this.setting.width -this.size;
+        //     this.oldx = n;
+        // }
+        // if (this.x <   this.size ) {
+        //     let n = this.x;
+        //     this.x = this.size;
+        //     this.oldx = n;
+        // }
+        // this.vel.y +=   this.grav;
+        // if (this.type !== 'static') {
+        //     let tempx = this.x;
+        //     let tempy = this.y;
+        //
+        //     this.acc.y += this.grav;
+        //     this.x +=  this.x - this.oldx + this.acc.x ** 2;
+        //     this.y +=  this.y - this.oldy + this.acc.y ** 2;
+        //
+        //     this.oldx = tempx ;
+        //     this.oldy = tempy;
+        // };
+
+        // this.vel.y += this.acc.y + this.grav;
+        // this.vel.x += this.acc.x ;
+
+
+        this.vel.x += this.acc.x;
+        this.vel.y += this.acc.y + this.grav;
+        this.x += this.vel.x;
+        this.y += this.vel.y;
+
+        // let x = this.x;
+        // let y = this.y;
+        // this.x += this.x - this.oldx + this.acc.x;
+        // this.y += this.y - this.oldy + this.acc.y;
+        //
+        // this.oldx = x;
+        // this.oldy = y;
+
+
+        if (this.y >= State.setting.height - this.size) {
+
+            this.y = State.setting.height - this.size;
+            this.vel.y = (-this.vel.y)/2;
+            // this.oldx = this.x - (this.x-this.oldx)*0.1;
+            // this.vel.y = -this.vel.y;
+        }
+    }
+
+    moveVerle() {
 
 
         if (this.type === 'static') return;
@@ -242,19 +297,24 @@ export class Point extends Vector {
 
         let x = this.x;
         let y = this.y;
-        this.x += this.x - this.oldx + this.acc.x ** 2;
-        this.y += this.y - this.oldy + this.acc.y ** 2 + this.grav ** 2;
+
+        this.x += this.x - this.oldx + this.acc.x;
+        this.y += this.y - this.oldy + this.acc.y**2 + this.grav**2;
 
         this.oldx = x;
         this.oldy = y;
 
 
         if (this.y >= State.setting.height - this.size) {
+
+
+
             let n = this.y;
             let o = this.oldy;
 
+
             this.y = State.setting.height - this.size;
-            this.oldy = this.y + (n - o);
+            this.oldy = this.y + (n - o)/1.5;
             // this.oldx = this.x - (this.x-this.oldx)*0.1;
             // this.vel.y = -this.vel.y;
         }
@@ -295,6 +355,7 @@ export class Point extends Vector {
 
          }*/
     }
+
 
     draw() {
         State.setting.ctx.beginPath();
