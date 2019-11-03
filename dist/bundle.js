@@ -568,6 +568,7 @@ game.render.animate();
 button.addEventListener("click", (e) => {
     log('button');
     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.addBuffer();
+     _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer[0].points[0].type = 'static';
 });
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
