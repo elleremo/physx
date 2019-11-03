@@ -24,9 +24,9 @@ export class Render {
             struct.draw();
         });
         State.structManager.structs.forEach((struct) => {
+            struct.draw();
             struct.move();
             struct.solve();
-            struct.draw();
         });
         // p1.move();
         //

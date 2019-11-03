@@ -32,7 +32,7 @@ button.addEventListener("click", (e) => {
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            // State.structManager.buffer[0].points[0].type = 'static';
+            State.structManager.buffer[0].points[0].type = 'static';
             State.structManager.addBuffer();
             log('space');
             // log(State);
@@ -56,7 +56,7 @@ let o = {
     clickCount: 0,
     struct: undefined,
     init() {
-        this.struct = new Struct('web');
+        this.struct = new Struct('line');
         // this.struct = new Struct('line');
         State.structManager.buffer.push(this.struct);
         o.click();

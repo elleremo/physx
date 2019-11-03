@@ -52,9 +52,9 @@ export class Render {
 
         State.structManager.structs.forEach((struct: Struct) => {
 
+            struct.draw();
             struct.move();
             struct.solve();
-            struct.draw();
         })
 
         // p1.move();

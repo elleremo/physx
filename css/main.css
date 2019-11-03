@@ -69,6 +69,7 @@ body {
 
 .button{
     background-color: #1e1e1e;
+    display: block;
 }
 
 .button:hover{

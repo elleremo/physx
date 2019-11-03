@@ -83,7 +83,7 @@
 /******/ 	// webpack-livereload-plugin
 /******/ 	(function() {
 /******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script-3702680ffeac55b3";
+/******/ 	  var id = "webpack-livereload-plugin-script-5635dcdddfc5bcbf";
 /******/ 	  if (document.getElementById(id)) { return; }
 /******/ 	  var el = document.createElement("script");
 /******/ 	  el.id = id;
@@ -168,9 +168,9 @@ class Render {
             struct.draw();
         });
         State.structManager.structs.forEach((struct) => {
+            struct.draw();
             struct.move();
             struct.solve();
-            struct.draw();
         });
         // p1.move();
         //
@@ -285,9 +285,9 @@ class Struct {
         });
     }
     draw() {
-        // this.edges.forEach((edge: Edge) => {
-        //     edge.draw();
-        // });
+        this.edges.forEach((edge) => {
+            edge.draw();
+        });
         this.points.forEach((point) => {
             point.draw();
         });
@@ -342,7 +342,7 @@ class Edge {
         let V1V2 = Vector.vectorAB(this.firstNode, this.lastNode); // вектор между вершинами
         let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
         let V1V2Length = V1V2.length; // дистаниця
-        let diff = (V1V2Length - this.baseLength) / 10;
+        let diff = (V1V2Length - this.baseLength) / 2;
         if (this.firstNode.type !== 'static') {
             this.firstNode.x += V1V2_Normalize.x * diff;
             this.firstNode.y += V1V2_Normalize.y * diff;
@@ -572,7 +572,7 @@ button.addEventListener("click", (e) => {
 let KeyMap = window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "Space":
-            // State.structManager.buffer[0].points[0].type = 'static';
+            _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer[0].points[0].type = 'static';
             _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.addBuffer();
             log('space');
             // log(State);
@@ -596,7 +596,7 @@ let o = {
     clickCount: 0,
     struct: undefined,
     init() {
-        this.struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('web');
+        this.struct = new _Vectrors__WEBPACK_IMPORTED_MODULE_1__["Struct"]('line');
         // this.struct = new Struct('line');
         _Render__WEBPACK_IMPORTED_MODULE_2__["State"].structManager.buffer.push(this.struct);
         o.click();

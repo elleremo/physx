@@ -72,9 +72,9 @@ export class Struct {
     }
 
     draw() {
-        // this.edges.forEach((edge: Edge) => {
-        //     edge.draw();
-        // });
+        this.edges.forEach((edge: Edge) => {
+            edge.draw();
+        });
         this.points.forEach((point: Point) => {
             point.draw();
         })
@@ -143,7 +143,8 @@ export class Edge {
         let V1V2 = Vector.vectorAB(this.firstNode, this.lastNode); // вектор между вершинами
         let V1V2_Normalize = V1V2.normalize(); // нормализованный вектор
         let V1V2Length = V1V2.length; // дистаниця
-        let diff = (V1V2Length - this.baseLength) / 10;
+        let diff = (V1V2Length - this.baseLength) / 2;
+
 
 
         if (this.firstNode.type !== 'static') {
@@ -155,6 +156,9 @@ export class Edge {
             this.lastNode.x -= V1V2_Normalize.x * diff;
             this.lastNode.y -= V1V2_Normalize.y * diff;
         }
+
+
+
 
     }
 
